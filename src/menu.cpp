@@ -1,0 +1,121 @@
+#include <iostream>
+
+#include "../include/menu.h"
+#include "../include/terminal.h"
+
+void initializeMenu(Menu& menu, Box& box, const std::string& title, bool isHidden) {
+	menu.box = box;
+	menu.title = title;
+	menu.size = 0;
+	menu.sizeHidden = 0;
+	menu.isHiddenAction = isHidden;
+}
+
+void addMenu(Menu& menu, const std::string& title, Action action, char key) {
+	if (menu.size < 16) {
+		menu.items[menu.size].name = title;
+		menu.items[menu.size].action = action;
+		menu.items[menu.size].key = key;
+		++menu.size;
+	}
+}
+
+void addHiddenMenu(Menu& menu, HiddenAction hiddenAction, char hiddenKey, int hiddenSize) {
+	if (menu.sizeHidden < sizeHiddenMenu) {
+		menu.hiddenItems[menu.sizeHidden].hiddenAction = hiddenAction;
+		menu.hiddenItems[menu.sizeHidden].key = hiddenKey;
+		++menu.sizeHidden;
+	}
+}
+
+void populateMenu(
+	Menu& menu,
+	std::string name[],
+	Action action[],
+	char key[],
+	int size,
+	HiddenAction hiddenActions[],
+	char hiddenKeys[],
+	int hiddenSize
+	) {
+
+	for (int i = 0; i < size; ++i) {
+		addMenu(menu, name[i], action[i], key[i]);
+	}
+
+	if (menu.isHiddenAction && hiddenActions && hiddenKeys) {
+		for (int i = 0; i < hiddenSize; ++i) {
+			addHiddenMenu(menu, hiddenActions[i], hiddenKeys[i], hiddenSize);
+		}
+	}
+}
+
+ResolvedAction resolveAction(const Menu& menu) {
+	ResolvedAction result;
+	int key = getKey();
+
+	if (key == 0 || key == 224) {
+		const int secondKey = getch();
+		for (size_t i = 0; i < menu.size; ++i) {
+			if (secondKey == menu.items[i].key) {
+				result.action = menu.items[i].action;
+				return result;
+			}
+		}
+		for (size_t i = 0; i < menu.sizeHidden; ++i) {
+			if (secondKey == menu.hiddenItems[i].key) {
+				result.hiddenAction = menu.hiddenItems[i].hiddenAction;
+				return result;
+			}
+		}
+	}
+	else  {
+		for (size_t i = 0; i < menu.size; ++i)  {
+			if (key == menu.items[i].key)  {
+				result.action = menu.items[i].action;
+				return result;
+			}
+		}
+		for (size_t i = 0; i < menu.sizeHidden; ++i)  {
+			if (key == menu.hiddenItems[i].key)  {
+				result.hiddenAction = menu.hiddenItems[i].hiddenAction;
+				return result;
+			}
+		}
+	}
+	return result;
+}
+
+static int getKey() {
+	int key = getch();
+
+	if (key != 27) {
+		return key;
+	}
+
+	int second = getch();
+
+	if (second != '[') {
+		return 27; // regular Escape
+	}
+
+	int third = getch();
+
+	switch (third) {
+		case 'A': return 72; // up
+		case 'B': return 80; // down
+		case 'C': return 77; // right
+		case 'D': return 75; // left
+		default:  return 27;
+	}
+}
+
+void draw(const Menu& menu) {
+	setColors(menu.textColor);
+
+	gotoxy(menu.box.geometry.topLeft.x + 1, menu.box.geometry.topLeft.y + 1); std::cout << menu.title;
+	for (int i{}; i < menu.size; ++i) {
+		gotoxy(menu.box.geometry.topLeft.x + 1, i + 3);
+		std::cout << menu.items[i].name;		
+	}
+}
