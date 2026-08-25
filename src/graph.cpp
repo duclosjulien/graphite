@@ -66,9 +66,11 @@ void zoomOut(Graph& graph) {
 void zoomOutX(Graph& graph) { graph.zoomXFactor -= graph.zoomXFactor * 0.10; }
 void zoomOutY(Graph& graph) { graph.zoomYFactor -= graph.zoomYFactor * 0.10; }
 
+/*
 void pan(Graph& graph, const IntPoint& translation) {
 
 }
+*/
 
 void panLeft(Graph& graph) { graph.centerOffset.x -= 1; }
 

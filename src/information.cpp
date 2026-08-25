@@ -39,8 +39,8 @@ static void drawInformationMain(const Application& application) {
         "Press V to explore or C to edit curves"
     };
 
-    for (int y = 0; y < std::size(label); ++y) {
-        gotoxy(topLeft.x + 1, topLeft.y + 1 + y);
+    for (std::size_t y = 0; y < std::size(label); ++y) {
+        gotoxy(topLeft.x + 1, topLeft.y + 1 + static_cast<int>(y));
         std::cout << std::left << std::setw(14) << label[y] << ": " << info[y];
     }
 }
@@ -69,8 +69,8 @@ static void drawInformationVisualization(const Application& application) {
         toString(zoom, 2, "", " X ", "")
     };
 
-    for (int y{}; y < std::size(label); ++y) {
-        gotoxy(topLeft.x + 1, topLeft.y + 1 + y);
+    for (std::size_t y = 0; y < std::size(label); ++y) {
+        gotoxy(topLeft.x + 1, topLeft.y + 1 + static_cast<int>(y));
         std::cout << std::left << std::setw(14) << label[y] << ": " << info[y];
     }
 }
@@ -78,7 +78,6 @@ static void drawInformationVisualization(const Application& application) {
 static void drawInformationCurve(const Application& application) {
     setColors(application.box[2].textColors);
     
-    IntPoint topLeft = application.box[2].geometry.topLeft;
     Item* item[] = { nullptr, nullptr, application.currentCurve, nullptr, nullptr };
 
     if (application.currentCurve && application.currentCurve->prev) {
@@ -95,8 +94,8 @@ static void drawInformationCurve(const Application& application) {
 
     clearBoxContent(application.box[2]);
     
-    for (int i{}; i < sizeof(item) / sizeof(item[0]); ++i) {
-        gotoxy(application.box[2].geometry.topLeft.x + 1, application.box[2].geometry.topLeft.y + 1 + i);
+    for (std::size_t i = 0; i < std::size(item); ++i) {
+        gotoxy(application.box[2].geometry.topLeft.x + 1, application.box[2].geometry.topLeft.y + 1 + static_cast<int>(i));
 
         if (i == 2)
             std::cout << std::setw(5) << "  >>>" << " : ";
