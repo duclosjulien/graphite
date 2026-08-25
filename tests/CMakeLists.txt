@@ -8,5 +8,6 @@ target_link_libraries(graphite_tests
         Catch2::Catch2WithMain
 )
 
+graphite_enable_warnings(graphite_tests)
 include(Catch)
 catch_discover_tests(graphite_tests)

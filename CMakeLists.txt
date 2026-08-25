@@ -5,6 +5,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+function(graphite_enable_warnings target)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(${target}
+                PRIVATE
+                -Wall
+                -Wextra
+                -Wpedantic
+        )
+    endif()
+endfunction()
+
 add_library(graphite_core
         src/actions.cpp
         src/application.cpp
@@ -34,6 +45,9 @@ target_link_libraries(graphite
         PRIVATE
         graphite_core
 )
+
+graphite_enable_warnings(graphite_core)
+graphite_enable_warnings(graphite)
 
 include(CTest)
 
