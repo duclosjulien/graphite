@@ -1,4 +1,4 @@
-#include "../include/curvelist.h"
+#include "curvelist.h"
 
 void initialize(CurvesList& list) {
 	list.first = list.last = nullptr;

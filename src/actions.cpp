@@ -1,4 +1,4 @@
-#include "../include/actions.h"
+#include "actions.h"
 
 const int sizeActionHome = 3, 
 		  sizeActionVisualization = 12,

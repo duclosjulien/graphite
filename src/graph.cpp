@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../include/terminal.h"
-#include "../include/graph.h"
+#include "terminal.h"
+#include "graph.h"
 
 void initialize(Graph& graph, const Box& box, double zoomFactor) {
 	graph.box = box;

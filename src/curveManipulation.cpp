@@ -1,4 +1,4 @@
-#include "../include/curveManipulation.h"
+#include "curveManipulation.h"
 
 void selectNextCurve(Application& application) {
     if (application.currentCurve && application.currentCurve->next)

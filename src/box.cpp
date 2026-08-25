@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cmath>
 
-#include "../include/box.h"
-#include "../include/application.h"
-#include "../include/terminal.h"
+#include "box.h"
+#include "application.h"
+#include "terminal.h"
 
 void initialize(Box& box, const IntRectangle& geometry, const std::string& title, const std::string& status) {
     box.geometry = geometry;
