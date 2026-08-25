@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../include/menu.h"
-#include "../include/terminal.h"
+#include "menu.h"
+#include "terminal.h"
 
 void initializeMenu(Menu& menu, Box& box, const std::string& title, bool isHidden) {
 	menu.box = box;

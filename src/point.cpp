@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "../include/point.h"
+#include "point.h"
 
 RealPoint toReal(const IntPoint& point) {
 	return { double(point.x), double(point.y) };

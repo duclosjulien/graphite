@@ -1,9 +1,9 @@
 #include <fstream>
 
-#include "../include/application.h"
-#include "../include/curveManipulation.h"
-#include "../include/terminal.h"
-#include "include/information.h"
+#include "application.h"
+#include "curveManipulation.h"
+#include "terminal.h"
+#include "information.h"
 
 static void doAction(Application& application);
 static void handleHiddenAction(Application& app, HiddenAction hiddenAction);

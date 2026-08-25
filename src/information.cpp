@@ -2,8 +2,8 @@
 #include <iomanip>
 #include <iterator>
 
-#include "../include/information.h"
-#include "../include/terminal.h"
+#include "information.h"
+#include "terminal.h"
 
 static void drawInformationMain(const Application& application);
 static void drawInformationVisualization(const Application& application);
