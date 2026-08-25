@@ -43,8 +43,7 @@ if(BUILD_TESTING)
     FetchContent_Declare(
             Catch2
             GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-            GIT_TAG v3.15.3
-            GIT_SHALLOW TRUE
+            GIT_TAG 8b08d4d79514f45f7e4ce2a607ac9c94e920d1bb
     )
 
     FetchContent_MakeAvailable(Catch2)
