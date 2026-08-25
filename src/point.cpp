@@ -16,7 +16,7 @@ std::string toString(const IntPoint& point, const std::string& prefix, const std
 	return prefix + std::to_string(point.x) + separator + std::to_string(point.y) + suffix;
 }
 
-std::string toString(const RealPoint& point, size_t precision, const std::string& prefix, const std::string& separator , const std::string& suffix) {
+std::string toString(const RealPoint& point, int precision, const std::string& prefix, const std::string& separator , const std::string& suffix) {
 
 	std::stringstream ss;
 	ss << prefix

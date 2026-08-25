@@ -206,11 +206,11 @@ Color getRandomColor() {
 		Color::_cyn
 	};
 
-	return curveColors[std::rand() % std::size(curveColors)];
+	return curveColors[static_cast<std::size_t>(std::rand()) % std::size(curveColors)];
 }
 
-int getRandomNumber(const int min, const int max) {
-	return min + std::rand() % (max - min + 1);
+std::size_t getRandomNumber(std::size_t min, std::size_t max) {
+	return min + static_cast<std::size_t>(std::rand()) % (max - min + 1);
 }
 
 static double processSinus(const double x, const Curve& curve) {

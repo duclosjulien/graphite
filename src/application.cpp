@@ -235,7 +235,7 @@ static void handleHiddenAction(Application& application, HiddenAction hiddenActi
         }
         
         if (index >= 0)
-        modifyParameter(application.currentCurve->curve, increment, index);
+        modifyParameter(application.currentCurve->curve, increment, static_cast<std::size_t>(index));
         
     }
 }
@@ -264,7 +264,7 @@ void saveCurveList(const Application& application) {
             f << "\n [curve]\n";
             f << " type = " << toStringCurveTypeShort(currentCurve->curve.curveType) << "\n";
             f << " coef = { ";
-            for (int j{}; j < currentCurve->curve.parameterValues.size(); ++j) {
+            for (std::size_t j = 0; j < currentCurve->curve.parameterValues.size(); ++j) {
                 if (j != currentCurve->curve.parameterValues.size() - 1)
                     f << currentCurve->curve.parameterValues.at(j) << ", ";
                 else
@@ -277,13 +277,5 @@ void saveCurveList(const Application& application) {
         }
         f.close();							
 
-    }
-}
-
-void curveEditor(const Application& application, const int index, const double increment) {
-    if (application.currentCurve) {
-        if (index >= 0 && index < application.currentCurve->curve.parameterValues.size()) {
-            application.currentCurve->curve.parameterValues.at(index) += increment * application.currentCurve->curve.parameterValues.at(index);
-        }
     }
 }

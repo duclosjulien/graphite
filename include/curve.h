@@ -27,7 +27,7 @@ struct Curve {
 };
  
 char getRandomLetter();
-int getRandomNumber(int min, int max);
+std::size_t getRandomNumber(std::size_t min, std::size_t max);
 Color getRandomColor();
 
 
