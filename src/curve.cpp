@@ -6,8 +6,8 @@
 #include <iterator>
 #include <cstdlib>
 
-#include "../include/curve.h"
-#include "../include/terminal.h"
+#include "curve.h"
+#include "terminal.h"
 
 Curve createSinus(
 	const double amplitude,
