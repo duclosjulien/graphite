@@ -1,10 +1,11 @@
 #pragma once
 
 #include <string>
-#include "colors.h"
-#include "graph.h"
 #include <vector>
 #include <cstddef>
+
+#include "colors.h"
+#include "graph.h"
 
 
 enum class CurveType {
@@ -79,4 +80,4 @@ void draw(const Curve& curve, const Graph& graph);
 
 void modifyParameter(Curve& curve, double increment, std::size_t parameterIndex);
 
-std::string toString(const Curve& curve, std::size_t precision = 2);
+std::string toString(const Curve& curve, int precision = 2);
