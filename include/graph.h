@@ -26,7 +26,7 @@ void zoomOut(Graph& graph);
 void zoomOutX(Graph& graph);
 void zoomOutY(Graph& graph);
 
-void pan(Graph& graph, const IntPoint& translation);
+//void pan(Graph& graph, const IntPoint& translation);
 void panLeft(Graph& graph);
 void panUp(Graph& graph);
 void panRight(Graph& graph);

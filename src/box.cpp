@@ -75,7 +75,7 @@ void drawOutline(const Box& box) {
 
 void drawTitle(const Box& box, int width) {
     setColors(box.outlineColors);
-    gotoxy(box.geometry.topLeft.x + std::round((width)/ 2.0) - std::round(box.title.length()/2.0), box.geometry.topLeft.y); 
+    gotoxy(static_cast<int>(box.geometry.topLeft.x + std::round((width)/ 2.0) - std::round(static_cast<double>(box.title.length())/2.0)), box.geometry.topLeft.y);
     std::cout << box.title;
 }
 

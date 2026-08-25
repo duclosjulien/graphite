@@ -12,6 +12,9 @@ function(graphite_enable_warnings target)
                 -Wall
                 -Wextra
                 -Wpedantic
+                -Wshadow
+                -Wconversion
+                -Wsign-conversion
         )
     endif()
 endfunction()
