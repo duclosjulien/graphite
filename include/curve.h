@@ -27,7 +27,7 @@ struct Curve {
 };
  
 char getRandomLetter();
-std::size_t getRandomNumber(std::size_t min, std::size_t max);
+int getRandomNumber(int min, int max);
 Color getRandomColor();
 
 
@@ -52,10 +52,11 @@ Curve createTangent(double amplitude = 1.0,
 					char curveChar = getRandomLetter(), 
 					Color color = getRandomColor());
 
-Curve createPolynomial(std::size_t order = getRandomNumber(1, 5),
-					   char curveChar = getRandomLetter(),
-					   Color color = getRandomColor());
-
+Curve createPolynomial(
+	std::size_t order = static_cast<std::size_t>(getRandomNumber(1, 5)),
+	char curveChar = getRandomLetter(),
+	Color color = getRandomColor()
+);
 
 Curve createExponential(double verticalScale = 1.0,
 						double base = 2.0,
