@@ -1,27 +1,11 @@
 cmake_minimum_required(VERSION 4.3)
-project(graphite)
+project(graphite LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories(include)
-
-add_executable(graphite
-        include/action.h
-        include/actions.h
-        include/application.h
-        include/box.h
-        include/colors.h
-        include/curve.h
-        include/curvelist.h
-        include/curveManipulation.h
-        include/graph.h
-        include/information.h
-        include/menu.h
-        include/point.h
-        include/rectangle.h
-        include/terminal.h
+add_library(graphite_core
         src/actions.cpp
         src/application.cpp
         src/box.cpp
@@ -31,8 +15,43 @@ add_executable(graphite
         src/curveManipulation.cpp
         src/graph.cpp
         src/information.cpp
-        src/main.cpp
         src/menu.cpp
         src/point.cpp
         src/rectangle.cpp
-        src/terminal.cpp)
+        src/terminal.cpp
+)
+
+target_include_directories(graphite_core
+        PUBLIC
+        include
+)
+
+add_executable(graphite
+        src/main.cpp
+)
+
+target_link_libraries(graphite
+        PRIVATE
+        graphite_core
+)
+
+include(CTest)
+
+if(BUILD_TESTING)
+    include(FetchContent)
+
+    FetchContent_Declare(
+            Catch2
+            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+            GIT_TAG v3.15.3
+            GIT_SHALLOW TRUE
+    )
+
+    FetchContent_MakeAvailable(Catch2)
+
+    list(APPEND CMAKE_MODULE_PATH
+            ${catch2_SOURCE_DIR}/extras
+    )
+
+    add_subdirectory(tests)
+endif()
