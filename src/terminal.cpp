@@ -23,7 +23,7 @@ int getch() {
 
     tcgetattr(STDIN_FILENO, &oldSettings);
     newSettings = oldSettings;
-    newSettings.c_lflag &= ~(ICANON | ECHO);
+    newSettings.c_lflag &= static_cast<tcflag_t>(~(ICANON | ECHO));
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
     int ch = getchar();
