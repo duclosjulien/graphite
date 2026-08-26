@@ -5,6 +5,7 @@
 #include <limits>
 #include <iterator>
 #include <cstdlib>
+#include <stdexcept>
 
 #include "curve.h"
 #include "terminal.h"
@@ -206,10 +207,14 @@ Color getRandomColor() {
 		Color::_cyn
 	};
 
-	return curveColors[std::rand() % std::size(curveColors)];
+	return curveColors[static_cast<std::size_t>(std::rand()) % std::size(curveColors)];
 }
 
-int getRandomNumber(const int min, const int max) {
+int getRandomNumber(int min, int max) {
+	if (min > max) {
+		throw std::invalid_argument("min cannot be greater than max");
+	}
+
 	return min + std::rand() % (max - min + 1);
 }
 

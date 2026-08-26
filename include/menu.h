@@ -35,15 +35,13 @@ struct Menu {
 };
 
 
-void initializeMenu(Menu& menu, Box& box, const std::string& title, bool isHidden = false);
+void initializeMenu(Menu& menu, const Box& box, const std::string& title, bool isHidden = false);
 
 void addMenu(Menu& menu, const std::string& title, Action action, char key);
 
-void populateMenu(Menu& menu, std::string name[], Action action[], char key[], int size,
+void populateMenu(Menu& menu, const std::string name[], Action action[], char key[], int size,
 	HiddenAction hiddenActions[] = nullptr, char hiddenKeys[] = nullptr, int hiddenSize = 0);
 
 ResolvedAction resolveAction(const Menu& menu);
 
 void draw(const Menu& menu);
-
-static int getKey();
