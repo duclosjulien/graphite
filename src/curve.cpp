@@ -103,10 +103,15 @@ Curve createTangent(
 	return curve;
 }
 
-Curve createPolynomial(const std::size_t order, const char curveChar, const Color color) {
+Curve createPolynomial(const std::size_t degree, const char curveChar, const Color color) {
 	Curve curve{};
 	curve.curveType = CurveType::Polynomial;
-	const std::size_t parameterCount = order + 1;
+
+	if (degree > maxPolynomialDegree) {
+		throw std::invalid_argument("polynomial degree exceeds the supported maximum");
+	}
+
+	const std::size_t parameterCount = degree + 1;
 
 	for (std::size_t i = 0; i < parameterCount; ++i)
 		curve.parameterNames.push_back("parameter " + std::to_string(i + 1));
