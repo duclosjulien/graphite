@@ -1,16 +1,13 @@
 #pragma once
 
-#include "box.h"
-#include "graph.h"
-#include "application.h"
+#include <string>
 
-const int informationSizeHome = 3, 
-		  informationSizeVisualization = 5,
-	      informationSizeCurve = 5;
+#include "application.h"
+#include "box.h"
+#include "curve.h"
 
 void drawInformationBox(const Application& application);
 
 std::string  toStringCurveTypeShort(CurveType curve);
 
 void clearBoxContent(const Box& box);
-

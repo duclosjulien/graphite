@@ -1,29 +1,29 @@
 #include "actions.h"
 
-const int sizeActionHome = 3, 
-		  sizeActionVisualization = 12,
-		  sizeActionCurve = 14,
-		  sizeHiddenActionCurve = 18;
+const std::size_t sizeActionHome = 3;
+const std::size_t sizeActionVisualization = 12;
+const std::size_t sizeActionCurve = 14;
+const std::size_t sizeHiddenActionCurve = 18;
 
-std::string homeName[sizeActionHome] {
+const std::string homeName[sizeActionHome] {
 	" V : Interactive view",
 	" C : Curve edition",
 	" * : Quit"
 };
 
-Action homeAction[sizeActionHome] {
+const Action homeAction[sizeActionHome] {
 	Action::ModeInteractiveView,
 	Action::ModeCurveEdition,
 	Action::Quit
 };
 
-char homeKey[sizeActionHome] {
+const char homeKey[sizeActionHome] {
 	'v',
 	'c',
 	27
 };
 
-std::string visualizationName[sizeActionVisualization] {
+const std::string visualizationName[sizeActionVisualization] {
 	" R : Reset view",
 	" < : Move left",
 	" ^ : Move up",
@@ -38,7 +38,7 @@ std::string visualizationName[sizeActionVisualization] {
 	" * : Return"
 };
 
-Action visualizationAction[sizeActionVisualization] {
+const Action visualizationAction[sizeActionVisualization] {
 	Action::VisualizationResetView,		
 	Action::VisualizationPanLeft,			
 	Action::VisualizationPanUp,				
@@ -54,7 +54,7 @@ Action visualizationAction[sizeActionVisualization] {
 
 };
 
-char visualizationKey[sizeActionVisualization] {
+const char visualizationKey[sizeActionVisualization] {
 	'r',
 	75,
 	72,
@@ -69,7 +69,7 @@ char visualizationKey[sizeActionVisualization] {
 	27
 };
 
-std::string curveName[sizeActionCurve] {
+const std::string curveName[sizeActionCurve] {
 	" ^ : Select previous",
 	" v : Select next",
 	" < : Select first",
@@ -86,7 +86,7 @@ std::string curveName[sizeActionCurve] {
 	" * : Return"
 };
 
-Action curveAction[sizeActionCurve] {
+const Action curveAction[sizeActionCurve] {
 	Action::CurveSelectUp,
 	Action::CurveSelectDown,
 	Action::CurveSelectFirst,
@@ -104,7 +104,7 @@ Action curveAction[sizeActionCurve] {
 	
 };
 
-char curveKey[sizeActionCurve] {
+const char curveKey[sizeActionCurve] {
 	72,
 	80,
 	75,
@@ -121,7 +121,7 @@ char curveKey[sizeActionCurve] {
 	27
 };
 
-HiddenAction curveHiddenAction[sizeHiddenActionCurve] {
+const HiddenAction curveHiddenAction[sizeHiddenActionCurve] {
 	HiddenAction::CurveCoefEditIncrease1,
 	HiddenAction::CurveCoefEditIncrease2,
 	HiddenAction::CurveCoefEditIncrease3,
@@ -142,7 +142,7 @@ HiddenAction curveHiddenAction[sizeHiddenActionCurve] {
 	HiddenAction::CurveCoefEditDecrease9
 };
 
-char hiddenCurveKey[sizeHiddenActionCurve] {
+const char hiddenCurveKey[sizeHiddenActionCurve] {
 	49,
 	50,
 	51,
@@ -162,4 +162,3 @@ char hiddenCurveKey[sizeHiddenActionCurve] {
 	66,
 	67
 };
-
