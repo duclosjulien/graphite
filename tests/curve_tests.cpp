@@ -5,6 +5,19 @@
 
 #include "curve.h"
 
+TEST_CASE("createPolynomial accepts the maximum degree") {
+    const Curve curve = createPolynomial(maxPolynomialDegree);
+
+    REQUIRE(
+        curve.parameterValues.size() ==
+        maxPolynomialDegree + 1
+    );
+    REQUIRE(
+        curve.parameterNames.size() ==
+        maxPolynomialDegree + 1
+    );
+}
+
 TEST_CASE("createPolynomial creates one coefficient per polynomial term") {
     constexpr std::size_t degree = 2;
 
