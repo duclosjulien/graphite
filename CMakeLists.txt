@@ -5,6 +5,18 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(
+        GRAPHITE_WARNINGS_AS_ERRORS
+        "Treat project compiler warnings as errors"
+        OFF
+)
+
+option(
+        GRAPHITE_ENABLE_SANITIZERS
+        "Enable AddressSanitizer and UndefinedBehaviorSanitizer"
+        OFF
+)
+
 function(graphite_enable_warnings target)
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         target_compile_options(${target}
@@ -15,6 +27,28 @@ function(graphite_enable_warnings target)
                 -Wshadow
                 -Wconversion
                 -Wsign-conversion
+        )
+
+        if(GRAPHITE_WARNINGS_AS_ERRORS)
+            target_compile_options(${target} PRIVATE -Werror)
+        endif()
+    endif()
+endfunction()
+
+function(graphite_enable_sanitizers target)
+    if(
+            GRAPHITE_ENABLE_SANITIZERS
+            AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"
+    )
+        target_compile_options(${target}
+                PRIVATE
+                -fsanitize=address,undefined
+                -fno-omit-frame-pointer
+        )
+
+        target_link_options(${target}
+                PRIVATE
+                -fsanitize=address,undefined
         )
     endif()
 endfunction()
@@ -51,6 +85,8 @@ target_link_libraries(graphite
 
 graphite_enable_warnings(graphite_core)
 graphite_enable_warnings(graphite)
+graphite_enable_sanitizers(graphite_core)
+graphite_enable_sanitizers(graphite)
 
 include(CTest)
 

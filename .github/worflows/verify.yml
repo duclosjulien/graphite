@@ -1,0 +1,106 @@
+name: Verify
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - dev
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test (${{ matrix.name }})
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: GCC 14
+            cc: gcc-14
+            cxx: g++-14
+
+          - name: Clang 18
+            cc: clang-18
+            cxx: clang++-18
+
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Show tool versions
+        run: |
+          cmake --version
+          "$CXX" --version 
+
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DBUILD_TESTING=ON
+          -DGRAPHITE_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: >
+          ctest --test-dir build
+          --output-on-failure
+          --no-tests=error
+
+  sanitizers:
+    name: ASan and UBSan
+    runs-on: ubuntu-24.04
+    needs: build-and-test
+
+    env:
+      CC: clang-18
+      CXX: clang++-18
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Show tool versions
+        run: |
+          cmake --version
+          "$CXX" --version
+
+      - name: Configure with sanitizers
+        run: >
+          cmake -S . -B build-sanitizers
+          -DCMAKE_BUILD_TYPE=Debug
+          -DBUILD_TESTING=ON
+          -DGRAPHITE_WARNINGS_AS_ERRORS=ON
+          -DGRAPHITE_ENABLE_SANITIZERS=ON
+
+      - name: Build with sanitizers
+        run: cmake --build build-sanitizers --parallel
+
+      - name: Test with sanitizers
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+        run: >
+          ctest --test-dir build-sanitizers
+          --output-on-failure
+          --no-tests=error
