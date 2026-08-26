@@ -1,12 +1,17 @@
 #include <fstream>
 
+#include "actions.h"
 #include "application.h"
 #include "curveManipulation.h"
 #include "terminal.h"
 #include "information.h"
 
-static void doAction(Application& application);
-static void handleHiddenAction(Application& app, HiddenAction hiddenAction);
+namespace {
+void doAction(Application& application);
+void handleHiddenAction(Application& application, HiddenAction hiddenAction);
+void draw(const Application& application);
+void saveCurveList(const Application& application);
+}
 
 void initialize(Application& application, int width, int height) {
     application.applicationIsRunning = true;
@@ -49,7 +54,7 @@ void run(Application& application) {
     setcp(437);
 
     draw();
-    draw(application.box);
+    draw(application.box, boxSize);
 
     insert(application.curves, application.currentCurve, createSinus());
     insert(application.curves, application.currentCurve, createCosinus());
@@ -63,15 +68,17 @@ void finalize(Application& application) {
     clear(application.curves);
 }
 
-static void doAction(Application& application) {
+namespace {
+void doAction(Application& application) {
     draw(application.box[1]);
-    draw(application.menu[static_cast<int>(application.currentMenu)]);
+    draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
     drawAxis(application.graph);
     drawForward(application.curves, application.graph);
     drawInformationBox(application);
 
     while (application.applicationIsRunning) {
-        ResolvedAction resolved = resolveAction(application.menu[static_cast<int>(application.currentMenu)]);
+        const ResolvedAction resolved = resolveAction(
+            application.menu[static_cast<std::size_t>(application.currentMenu)]);
 
         if (resolved.hiddenAction != HiddenAction::NoAction) {
             handleHiddenAction(application, resolved.hiddenAction);
@@ -85,19 +92,19 @@ static void doAction(Application& application) {
         case Action::ModeMain:
             application.currentMenu = Mode::HomeMenu;
             draw(application.box[1]);
-            draw(application.menu[static_cast<int>(application.currentMenu)]);
+            draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
             break;
 
         case Action::ModeInteractiveView:
             application.currentMenu = Mode::InteractiveView;
             draw(application.box[1]);
-            draw(application.menu[static_cast<int>(application.currentMenu)]);
+            draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
             break;
 
         case Action::ModeCurveEdition:
             application.currentMenu = Mode::CurveMenu;
             draw(application.box[1]);
-            draw(application.menu[static_cast<int>(application.currentMenu)]);
+            draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
             break;
 
         case Action::VisualizationZoomInX:
@@ -205,7 +212,7 @@ static void doAction(Application& application) {
     }
 }
 
-static void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
+void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
     if (application.currentCurve) {
         int index = -1;
         double increment = 0.1;
@@ -239,7 +246,9 @@ static void handleHiddenAction(Application& application, HiddenAction hiddenActi
         
     }
 }
+}
 
+namespace {
 void draw(const Application& application) {
     draw(application.graph.box);
     drawAxis(application.graph);
@@ -248,7 +257,9 @@ void draw(const Application& application) {
     else if (application.currentCurve)
         draw(application.currentCurve->curve, application.graph);
 }
+}
 
+namespace {
 void saveCurveList(const Application& application) {
     std::fstream f;
 
@@ -259,7 +270,7 @@ void saveCurveList(const Application& application) {
     if (f.is_open()) {
         f << "\n n_curves = " << application.curves.size << "\n";
 
-        Item* currentCurve = application.curves.first;
+        const Item* currentCurve = application.curves.first;
         while (currentCurve) {
             f << "\n [curve]\n";
             f << " type = " << toStringCurveTypeShort(currentCurve->curve.curveType) << "\n";
@@ -278,4 +289,5 @@ void saveCurveList(const Application& application) {
         f.close();							
 
     }
+}
 }

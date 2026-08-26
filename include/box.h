@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <string>
 
 #include "colors.h"
@@ -37,20 +38,8 @@ void initialize(Box& box,
 	const std::string& title = "",
 	const std::string& status = "");
 
-bool isValid(const Box& box);
-
-IntPoint boxToScreenCoord(const IntPoint& coord, const Box& box);
-IntPoint screenToBoxCoord(const IntPoint& coord, const Box& box);
-
-void drawSurface(const Box& box);
-
-void drawOutline(const Box& box);
-
-void drawTitle(const Box& box, int width);
-
 void draw(const Box& box);
 
-void draw(Box box[]);
+void draw(const Box box[], std::size_t size);
 
 void draw();
-

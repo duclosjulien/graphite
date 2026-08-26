@@ -10,6 +10,4 @@ void selectFirstCurve(Application& application);
 
 void selectLastCurve(Application& application);
 
-void saveCurveList(const Application& application);
-
 void removeCurrentCurve(Application& application);

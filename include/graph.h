@@ -32,6 +32,4 @@ void panUp(Graph& graph);
 void panRight(Graph& graph);
 void panDown(Graph& graph);
 
-void resetZoom(Graph& graph);
-void resetPan(Graph& graph);
 void reset(Graph& graph);

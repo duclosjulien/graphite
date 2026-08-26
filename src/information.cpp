@@ -6,10 +6,12 @@
 #include "information.h"
 #include "terminal.h"
 
-static void drawInformationMain(const Application& application);
-static void drawInformationVisualization(const Application& application);
-static void drawInformationCurve(const Application& application);
-static std::string toStringCurveType(CurveType curve);
+namespace {
+void drawInformationMain(const Application& application);
+void drawInformationVisualization(const Application& application);
+void drawInformationCurve(const Application& application);
+std::string toStringCurveType(CurveType curve);
+}
 
 
 void drawInformationBox(const Application& application) {
@@ -24,7 +26,8 @@ void drawInformationBox(const Application& application) {
     }
 }
 
-static void drawInformationMain(const Application& application) {
+namespace {
+void drawInformationMain(const Application& application) {
     setColors(application.box[2].textColors);
     IntPoint topLeft = application.box[2].geometry.topLeft;
 
@@ -46,7 +49,7 @@ static void drawInformationMain(const Application& application) {
     }
 }
 
-static void drawInformationVisualization(const Application& application) {
+void drawInformationVisualization(const Application& application) {
     setColors(application.box[2].textColors);
     
     int halfWidth = getWidth(application.box[0].geometry) / 2,
@@ -76,10 +79,10 @@ static void drawInformationVisualization(const Application& application) {
     }
 }
 
-static void drawInformationCurve(const Application& application) {
+void drawInformationCurve(const Application& application) {
     setColors(application.box[2].textColors);
     
-    Item* item[] = { nullptr, nullptr, application.currentCurve, nullptr, nullptr };
+    const Item* item[] = { nullptr, nullptr, application.currentCurve, nullptr, nullptr };
 
     if (application.currentCurve && application.currentCurve->prev) {
         item[1] = application.currentCurve->prev;
@@ -114,7 +117,7 @@ static void drawInformationCurve(const Application& application) {
     }
 }
 
-static std::string toStringCurveType(CurveType curve) {
+std::string toStringCurveType(CurveType curve) {
     switch (curve) {
     case CurveType::None:
         return " ";
@@ -133,6 +136,7 @@ static std::string toStringCurveType(CurveType curve) {
     }
 
     return " ";
+}
 }
 
 std::string toStringCurveTypeShort(CurveType curve) {
@@ -169,5 +173,4 @@ void clearBoxContent(const Box& box) {
 		}
 	}
 }
-
 

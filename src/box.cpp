@@ -2,8 +2,14 @@
 #include <cmath>
 
 #include "box.h"
-#include "application.h"
 #include "terminal.h"
+
+namespace {
+bool isValid(const Box& box);
+void drawSurface(const Box& box);
+void drawOutline(const Box& box);
+void drawTitle(const Box& box, int width);
+}
 
 void initialize(Box& box, const IntRectangle& geometry, const std::string& title, const std::string& status) {
     box.geometry = geometry;
@@ -19,6 +25,7 @@ void initialize(Box& box, const IntRectangle& geometry, const std::string& title
 
 }
 
+namespace {
 bool isValid(const Box& box) {
     if (getHeight(box.geometry) < 3 || getWidth(box.geometry) < 3) return false;
     
@@ -29,16 +36,6 @@ bool isValid(const Box& box) {
             return false;
   
     return true;
-}
-
-IntPoint boxToScreenCoord(const IntPoint& coord, const Box& box) {
-    return  { box.geometry.topLeft.x + coord.x,
-              box.geometry.topLeft.y + coord.y };
-}
-
-IntPoint screenToBoxCoord(const IntPoint& coord, const Box& box) {
-    return { coord.x - box.geometry.topLeft.x,
-             coord.y - box.geometry.topLeft.y };
 }
 
 void drawSurface(const Box& box) {
@@ -78,14 +75,15 @@ void drawTitle(const Box& box, int width) {
     gotoxy(static_cast<int>(box.geometry.topLeft.x + std::round((width)/ 2.0) - std::round(static_cast<double>(box.title.length())/2.0)), box.geometry.topLeft.y);
     std::cout << box.title;
 }
+}
 
 void draw(const Box& box) {
     drawSurface(box);
     drawOutline(box);
 }
 
-void draw(Box box[]) {
-    for (int i{}; i <= 2; ++i) {
+void draw(const Box box[], std::size_t size) {
+    for (std::size_t i = 0; i < size; ++i) {
         draw(box[i]);
     }
 }
@@ -99,4 +97,3 @@ void draw() {
         }
     }
 }
-
