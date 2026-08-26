@@ -32,3 +32,28 @@ TEST_CASE("createPolynomial rejects degrees above the maximum") {
         std::invalid_argument
     );
 }
+
+TEST_CASE("modifyParameter updates a valid parameter") {
+    Curve curve = createSinus();
+    const double originalValue = curve.parameterValues[0];
+
+    modifyParameter(curve, 0.5, 0);
+
+    REQUIRE(curve.parameterValues[0] == originalValue + 0.5);
+}
+
+TEST_CASE("modifyParameter ignores an unavailable parameter") {
+    Curve curve = createSinus();
+    const auto originalValues = curve.parameterValues;
+
+    modifyParameter(curve, 0.5, curve.parameterValues.size());
+
+    REQUIRE(curve.parameterValues == originalValues);
+}
+
+TEST_CASE("modifyParameter ignores an empty curve") {
+    Curve curve{};
+
+    REQUIRE_NOTHROW(modifyParameter(curve, 0.5, 0));
+    REQUIRE(curve.parameterValues.empty());
+}

@@ -7,7 +7,7 @@
 #include "colors.h"
 #include "graph.h"
 
-inline constexpr std::size_t maxPolynomialDegree = 8;
+inline constexpr std::size_t maxPolynomialDegree = 7;
 
 enum class CurveType {
 	None, 			// 
