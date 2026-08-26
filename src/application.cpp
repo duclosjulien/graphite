@@ -243,7 +243,7 @@ void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
         
         if (index >= 0)
         modifyParameter(application.currentCurve->curve, increment, static_cast<std::size_t>(index));
-        
+
     }
 }
 }
