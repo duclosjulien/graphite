@@ -1,5 +1,6 @@
 add_executable(graphite_tests
         point_tests.cpp
+        curve_tests.cpp
 )
 
 target_link_libraries(graphite_tests
