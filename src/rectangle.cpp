@@ -2,6 +2,7 @@
 
 #include "iomanip"
 #include <sstream>
+#include <cmath>
 
 bool isValid(const IntRectangle& rect) {
 	return (rect.bottomRight.x >= rect.topLeft.x && rect.bottomRight.y >= rect.topLeft.y);

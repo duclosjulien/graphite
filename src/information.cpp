@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <iterator>
+#include <string_view>
 
 #include "information.h"
 #include "terminal.h"
@@ -27,13 +28,13 @@ static void drawInformationMain(const Application& application) {
     setColors(application.box[2].textColors);
     IntPoint topLeft = application.box[2].geometry.topLeft;
 
-    constexpr std::string label[] = {
+    constexpr std::string_view label[] = {
         " About",
         " Functions",
         " Get started"
     };
 
-    const std::string info[] = {
+    const std::string_view info[] = {
         "Interactive mathematical function grapher",
         "Trigonometric, polynomial, exponential, logarithmic",
         "Press V to explore or C to edit curves"
@@ -97,12 +98,14 @@ static void drawInformationCurve(const Application& application) {
     for (std::size_t i = 0; i < std::size(item); ++i) {
         gotoxy(application.box[2].geometry.topLeft.x + 1, application.box[2].geometry.topLeft.y + 1 + static_cast<int>(i));
 
-        if (i == 2)
+        const int offset = static_cast<int>(i) - 2;
+
+        if (offset == 0)
             std::cout << std::setw(5) << "  >>>" << " : ";
-        else if (i - 2 < 0)
-            std::cout << " " << std::setw(4) << (i - 2) << " : ";
+        else if (offset < 0)
+            std::cout << " " << std::setw(4) << offset << " : ";
         else
-            std::cout << " +" << std::setw(3) << (i - 2) << " : ";
+            std::cout << " +" << std::setw(3) << offset << " : ";
 
         if (item[i])
 

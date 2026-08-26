@@ -188,7 +188,7 @@ Curve createLogarithmic(
 }
 
 char getRandomLetter() {
-	return 'A' + std::rand() % 26;
+	return static_cast<char>('A' + std::rand() % 26);
 }
 
 Color getRandomColor() {
