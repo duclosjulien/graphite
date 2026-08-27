@@ -107,10 +107,10 @@ TEST_CASE("modifyParameter handles degree-zero polynomial boundaries") {
 TEST_CASE("modifyParameter handles maximum-degree polynomial boundaries") {
     Curve curve = createPolynomial(maxPolynomialDegree);
 
-    modifyParameter(curve, 0.5, 8);
+    modifyParameter(curve, 0.5, maxPolynomialDegree);
     REQUIRE(curve.parameterValues[8] == 1.5);
 
     const auto values = curve.parameterValues;
-    modifyParameter(curve, 0.5, 9);
+    modifyParameter(curve, 0.5, maxPolynomialDegree + 1);
     REQUIRE(curve.parameterValues == values);
 }
