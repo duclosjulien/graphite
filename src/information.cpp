@@ -89,12 +89,11 @@ void drawInformationVisualization(const Application& application) {
 }
 
     void drawInformationCurve(const Application& application) {
-    setColors(application.box[2].textColors);
-
     const CurveCollection::CurveWindow curves =
         application.curves.currentWindow();
 
     clearBoxContent(application.box[2]);
+    setColors(application.box[2].textColors);
 
     for (std::size_t i = 0; i < curves.size(); ++i) {
         gotoxy(
