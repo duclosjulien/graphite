@@ -1,10 +1,6 @@
 #include "curvelist.h"
 
-void initialize(CurvesList& list) {
-	list.first = list.last = nullptr;
-	list.size = 0;
-}
-
+namespace {
 void pushLast(CurvesList& list, const Curve& curve) {
     Item* item = new Item{ curve, list.last, nullptr };
 
@@ -14,6 +10,12 @@ void pushLast(CurvesList& list, const Curve& curve) {
         list.first = list.last = item;
 
     ++list.size;
+}
+}
+
+void initialize(CurvesList& list) {
+	list.first = list.last = nullptr;
+	list.size = 0;
 }
 
 Item* insert(CurvesList& list, Item* pos, const Curve& curve) {
@@ -61,17 +63,9 @@ void clear(CurvesList& list) {
 }
 
 void drawForward(const CurvesList& list, const Graph& graph)  {
-    Item* item = list.first;
+    const Item* item = list.first;
     while (item) {
         draw(item->curve, graph);
         item = item->next;
-    }
-}
-
-void drawBackward(const CurvesList& list, const Graph& graph)  {
-    Item* item = list.last;
-    while (item) {
-        draw(item->curve, graph);
-        item = item->prev;
     }
 }

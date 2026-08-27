@@ -12,7 +12,6 @@ struct RealPoint  {
 };
 
 RealPoint toReal(const IntPoint& point);
-IntPoint toInt(const RealPoint& point);
 
 std::string toString(const IntPoint& point,
 	const std::string& prefix = "(",

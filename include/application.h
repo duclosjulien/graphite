@@ -1,10 +1,13 @@
 #pragma once
 
+#include <cstddef>
+
 #include "curvelist.h"
-#include "actions.h"
+#include "graph.h"
 #include "menu.h"
 
-const int boxSize = 3, menuSize = 3;
+constexpr std::size_t boxSize = 3;
+constexpr std::size_t menuSize = 3;
 
 enum class Mode { HomeMenu, InteractiveView, CurveMenu};
 
@@ -28,6 +31,3 @@ void initialize(Application& application, int width = 120, int height = 30);
 void run(Application& application);
 
 void finalize(Application& application);
-
-void draw(const Application& application);
-

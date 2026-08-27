@@ -1,14 +1,17 @@
 #include <iostream>
 #include <iomanip>
 #include <iterator>
+#include <string_view>
 
 #include "information.h"
 #include "terminal.h"
 
-static void drawInformationMain(const Application& application);
-static void drawInformationVisualization(const Application& application);
-static void drawInformationCurve(const Application& application);
-static std::string toStringCurveType(CurveType curve);
+namespace {
+void drawInformationMain(const Application& application);
+void drawInformationVisualization(const Application& application);
+void drawInformationCurve(const Application& application);
+std::string toStringCurveType(CurveType curve);
+}
 
 
 void drawInformationBox(const Application& application) {
@@ -23,17 +26,18 @@ void drawInformationBox(const Application& application) {
     }
 }
 
-static void drawInformationMain(const Application& application) {
+namespace {
+void drawInformationMain(const Application& application) {
     setColors(application.box[2].textColors);
     IntPoint topLeft = application.box[2].geometry.topLeft;
 
-    constexpr std::string label[] = {
+    constexpr std::string_view label[] = {
         " About",
         " Functions",
         " Get started"
     };
 
-    const std::string info[] = {
+    const std::string_view info[] = {
         "Interactive mathematical function grapher",
         "Trigonometric, polynomial, exponential, logarithmic",
         "Press V to explore or C to edit curves"
@@ -45,7 +49,7 @@ static void drawInformationMain(const Application& application) {
     }
 }
 
-static void drawInformationVisualization(const Application& application) {
+void drawInformationVisualization(const Application& application) {
     setColors(application.box[2].textColors);
     
     int halfWidth = getWidth(application.box[0].geometry) / 2,
@@ -75,10 +79,10 @@ static void drawInformationVisualization(const Application& application) {
     }
 }
 
-static void drawInformationCurve(const Application& application) {
+void drawInformationCurve(const Application& application) {
     setColors(application.box[2].textColors);
     
-    Item* item[] = { nullptr, nullptr, application.currentCurve, nullptr, nullptr };
+    const Item* item[] = { nullptr, nullptr, application.currentCurve, nullptr, nullptr };
 
     if (application.currentCurve && application.currentCurve->prev) {
         item[1] = application.currentCurve->prev;
@@ -97,12 +101,14 @@ static void drawInformationCurve(const Application& application) {
     for (std::size_t i = 0; i < std::size(item); ++i) {
         gotoxy(application.box[2].geometry.topLeft.x + 1, application.box[2].geometry.topLeft.y + 1 + static_cast<int>(i));
 
-        if (i == 2)
+        const int offset = static_cast<int>(i) - 2;
+
+        if (offset == 0)
             std::cout << std::setw(5) << "  >>>" << " : ";
-        else if (i - 2 < 0)
-            std::cout << " " << std::setw(4) << (i - 2) << " : ";
+        else if (offset < 0)
+            std::cout << " " << std::setw(4) << offset << " : ";
         else
-            std::cout << " +" << std::setw(3) << (i - 2) << " : ";
+            std::cout << " +" << std::setw(3) << offset << " : ";
 
         if (item[i])
 
@@ -111,7 +117,7 @@ static void drawInformationCurve(const Application& application) {
     }
 }
 
-static std::string toStringCurveType(CurveType curve) {
+std::string toStringCurveType(CurveType curve) {
     switch (curve) {
     case CurveType::None:
         return " ";
@@ -130,6 +136,7 @@ static std::string toStringCurveType(CurveType curve) {
     }
 
     return " ";
+}
 }
 
 std::string toStringCurveTypeShort(CurveType curve) {
@@ -166,5 +173,4 @@ void clearBoxContent(const Box& box) {
 		}
 	}
 }
-
 

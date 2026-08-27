@@ -1,4 +1,3 @@
-#include <cmath>
 #include <sstream>
 #include <iomanip>
 
@@ -6,10 +5,6 @@
 
 RealPoint toReal(const IntPoint& point) {
 	return { double(point.x), double(point.y) };
-}
-
-IntPoint toInt(const RealPoint& point) {
-	return { (int)std::round(point.x), (int)std::round(point.y) };
 }
 
 std::string toString(const IntPoint& point, const std::string& prefix, const std::string& separator, const std::string& suffix) {

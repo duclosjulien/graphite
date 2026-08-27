@@ -80,12 +80,13 @@ void panRight(Graph& graph) { graph.centerOffset.x += 1;}
 
 void panDown(Graph& graph) { graph.centerOffset.y += 1; }
 
+namespace {
 void resetZoom(Graph& graph) { graph.zoomXFactor = graph.zoomYFactor = 5.0; }
 
 void resetPan(Graph& graph) { graph.centerOffset = { 0,0 }; }
+}
 
 void reset(Graph& graph) {
     resetPan(graph);
     resetZoom(graph);
 }
-
