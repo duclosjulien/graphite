@@ -6,6 +6,7 @@
 
 #include "information.h"
 #include "terminal.h"
+#include "curveCollection.h"
 
 namespace {
 void drawInformationMain(const Application& application);
@@ -87,41 +88,42 @@ void drawInformationVisualization(const Application& application) {
     }
 }
 
-void drawInformationCurve(const Application& application) {
+    void drawInformationCurve(const Application& application) {
     setColors(application.box[2].textColors);
-    
-    const Item* item[] = { nullptr, nullptr, application.currentCurve, nullptr, nullptr };
 
-    if (application.currentCurve && application.currentCurve->prev) {
-        item[1] = application.currentCurve->prev;
-        if (item[1]->prev)
-            item[0] = item[1]->prev;
-    }
-
-    if (application.currentCurve && application.currentCurve->next) {
-        item[3] = application.currentCurve->next;
-        if (item[3]->next)
-            item[4] = item[3]->next;
-    }
+    const CurveCollection::CurveWindow curves =
+        application.curves.currentWindow();
 
     clearBoxContent(application.box[2]);
-    
-    for (std::size_t i = 0; i < std::size(item); ++i) {
-        gotoxy(application.box[2].geometry.topLeft.x + 1, application.box[2].geometry.topLeft.y + 1 + static_cast<int>(i));
+
+    for (std::size_t i = 0; i < curves.size(); ++i) {
+        gotoxy(
+            application.box[2].geometry.topLeft.x + 1,
+            application.box[2].geometry.topLeft.y + 1
+                + static_cast<int>(i)
+        );
 
         const int offset = static_cast<int>(i) - 2;
 
-        if (offset == 0)
+        if (offset == 0) {
             std::cout << std::setw(5) << "  >>>" << " : ";
-        else if (offset < 0)
+        }
+        else if (offset < 0) {
             std::cout << " " << std::setw(4) << offset << " : ";
-        else
+        }
+        else {
             std::cout << " +" << std::setw(3) << offset << " : ";
+        }
 
-        if (item[i])
+        const Curve* curve = curves[i];
 
-            std::cout << std::right << std::setw(10) << toStringCurveType(item[i]->curve.curveType)
-            << std::left << " [" << item[i]->curve.curveChar << "] | " << toString(item[i]->curve, 2);
+        if (curve != nullptr) {
+            std::cout
+                << std::right << std::setw(11)
+                << toStringCurveType(curve->curveType)
+                << std::left << " [" << curve->curveChar << "] | "
+                << toString(*curve, 2);
+        }
     }
 }
 
@@ -140,7 +142,7 @@ std::string toStringCurveType(CurveType curve) {
     case CurveType::Exponential:
         return "exponential";
     case CurveType::Logarithmic:
-        return "logrithmic";
+        return "logarithmic";
     }
 
     return " ";
