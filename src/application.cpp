@@ -65,8 +65,7 @@ namespace {
     void doAction(Application& application) {
         draw(application.box[1]);
         draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
-        drawAxis(application.graph);
-        drawCurves(application.curves, application.graph);
+        draw(application);
         drawInformationBox(application);
 
         while (application.applicationIsRunning) {
@@ -292,13 +291,14 @@ namespace {
                 f << " coef = { ";
 
                 for (std::size_t j = 0; j < curve.parameterValues.size(); ++j) {
-                    if (j != curve.parameterValues.size() - 1) {
-                        f << curve.parameterValues.at(j) << ", ";
+                    if (j > 0) {
+                        f << ", ";
                     }
-                    else {
-                        f << curve.parameterValues.at(j) << " }\n";
-                    }
+
+                    f << curve.parameterValues[j];
                 }
+
+                f << " }\n";
                 f << " char = " << curve.curveChar << "\n";
                 f << " color = " << static_cast<int>(curve.color) << "\n";
             }
