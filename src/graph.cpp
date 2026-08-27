@@ -14,15 +14,15 @@ void initialize(Graph& graph, const Box& box, double zoomFactor) {
 IntPoint graphToBoxCoord(const RealPoint& coord, const Graph& graph) {
     RealPoint center = getRealCenter(graph.box.geometry);
 
-    return { (int)(center.x + graph.centerOffset.x + coord.x * graph.zoomXFactor),
-			 (int)(center.y + graph.centerOffset.y + coord.y * graph.zoomYFactor) };
+    return { static_cast<int>(center.x + graph.centerOffset.x + coord.x * graph.zoomXFactor),
+			 static_cast<int>(center.y + graph.centerOffset.y - coord.y * graph.zoomYFactor) };
 }
 
 RealPoint boxToGraphCoord(const IntPoint& coord, const Graph& graph) {
     RealPoint center = getRealCenter(graph.box.geometry);
 
-    return{ (double)((coord.x - (center.x + graph.centerOffset.x)) / graph.zoomXFactor),
-			(double)((coord.y - (center.y + graph.centerOffset.y)) / graph.zoomXFactor) };
+    return{ (coord.x - (center.x + graph.centerOffset.x)) / graph.zoomXFactor,
+			-(coord.y - (center.y + graph.centerOffset.y)) / graph.zoomYFactor };
 }
 
 void drawAxis(const Graph& graph) {

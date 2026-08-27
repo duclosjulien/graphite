@@ -224,15 +224,15 @@ int getRandomNumber(int min, int max) {
 }
 
 static double processSinus(const double x, const Curve& curve) {
-	return -curve.parameterValues.at(0) * std::sin(curve.parameterValues.at(1) * x + curve.parameterValues.at(2)) + curve.parameterValues.at(3);
+	return curve.parameterValues.at(0) * std::sin(curve.parameterValues.at(1) * x + curve.parameterValues.at(2)) + curve.parameterValues.at(3);
 }
 
 static double processCosinus(const double x, const Curve& curve) {
-	return -curve.parameterValues.at(0) * std::cos(curve.parameterValues.at(1) * x + curve.parameterValues.at(2)) + curve.parameterValues.at(3);
+	return curve.parameterValues.at(0) * std::cos(curve.parameterValues.at(1) * x + curve.parameterValues.at(2)) + curve.parameterValues.at(3);
 }
 
 static double processTangent(const double x, const Curve& curve) {
-	return -curve.parameterValues.at(0) * std::tan(curve.parameterValues.at(1) * x + curve.parameterValues.at(2)) + curve.parameterValues.at(3);
+	return curve.parameterValues.at(0) * std::tan(curve.parameterValues.at(1) * x + curve.parameterValues.at(2)) + curve.parameterValues.at(3);
 
 }
 
@@ -242,11 +242,11 @@ static double processPolynomial(const double x, const Curve& curve) {
 	for (std::size_t i = 0; i < parameterCount; ++i) {
 		y += curve.parameterValues.at(i) * std::pow(x, i);
 	}
-	return -y;
+	return y;
 }
 
 static double processExponential(const double x, const Curve& curve) {
-	return -curve.parameterValues.at(0) * std::pow(curve.parameterValues.at(1), curve.parameterValues.at(2) * x + curve.parameterValues.at(3)) + curve.parameterValues.at(4);
+	return curve.parameterValues.at(0) * std::pow(curve.parameterValues.at(1), curve.parameterValues.at(2) * x + curve.parameterValues.at(3)) + curve.parameterValues.at(4);
 }
 
 static double processLogarithmic(const double x, const Curve& curve) {
@@ -266,7 +266,7 @@ static double processLogarithmic(const double x, const Curve& curve) {
 	}
 	const double logarithm = std::log(argument) / std::log(b);
 
-	return -a * logarithm + e;
+	return a * logarithm + e;
 }
 
 double process(const double x, const Curve& curve) {
