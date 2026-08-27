@@ -2,15 +2,15 @@
 
 #include "actions.h"
 #include "application.h"
-#include "curveManipulation.h"
 #include "terminal.h"
 #include "information.h"
 
 namespace {
-void doAction(Application& application);
-void handleHiddenAction(Application& application, HiddenAction hiddenAction);
-void draw(const Application& application);
-void saveCurveList(const Application& application);
+    void doAction(Application& application);
+    void handleHiddenAction(Application& application, HiddenAction hiddenAction);
+    void draw(const Application& application);
+    void saveCurveList(const Application& application);
+    void drawCurves(const CurveCollection& curves, const Graph& graph);
 }
 
 void initialize(Application& application, int width, int height) {
@@ -20,7 +20,6 @@ void initialize(Application& application, int width, int height) {
     application.layoutOffset = 1;
     application.currentMenu = Mode::HomeMenu;
     application.showAllCurves = true;
-    application.currentCurve = nullptr;
    
     const int spacing = application.layoutOffset;
     const int visualizationWidth = 22 + spacing * 2;     
@@ -37,8 +36,7 @@ void initialize(Application& application, int width, int height) {
     initialize(application.box[2], infoRect, "Function Grapher");
 
     initialize(application.graph, application.box[0]);
-    initialize(application.curves);
-    
+
     initializeMenu(application.menu[0], application.box[1], " Home");
     initializeMenu(application.menu[1], application.box[1], " Interactive View");
     initializeMenu(application.menu[2], application.box[1], " Curve", true);
@@ -56,164 +54,164 @@ void run(Application& application) {
     draw();
     draw(application.box, boxSize);
 
-    insert(application.curves, application.currentCurve, createSinus());
-    insert(application.curves, application.currentCurve, createCosinus());
-    application.currentCurve = insert(application.curves, application.currentCurve, createTangent());
-
     doAction(application);
 }
 
 void finalize(Application& application) {
     saveCurveList(application);
-    clear(application.curves);
 }
 
 namespace {
-void doAction(Application& application) {
-    draw(application.box[1]);
-    draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
-    drawAxis(application.graph);
-    drawForward(application.curves, application.graph);
-    drawInformationBox(application);
+    void doAction(Application& application) {
+        draw(application.box[1]);
+        draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
+        drawAxis(application.graph);
+        drawCurves(application.curves, application.graph);
+        drawInformationBox(application);
 
-    while (application.applicationIsRunning) {
-        const ResolvedAction resolved = resolveAction(
-            application.menu[static_cast<std::size_t>(application.currentMenu)]);
+        while (application.applicationIsRunning) {
+            const ResolvedAction resolved = resolveAction(
+                application.menu[static_cast<std::size_t>(application.currentMenu)]);
 
-        if (resolved.hiddenAction != HiddenAction::NoAction) {
-            handleHiddenAction(application, resolved.hiddenAction);
-        }
+            if (resolved.hiddenAction != HiddenAction::NoAction) {
+                handleHiddenAction(application, resolved.hiddenAction);
+            }
 
-        switch (resolved.action) {
-        case Action::Quit:
-            application.applicationIsRunning = false;
-            break;
-
-        case Action::ModeMain:
-            application.currentMenu = Mode::HomeMenu;
-            draw(application.box[1]);
-            draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
-            break;
-
-        case Action::ModeInteractiveView:
-            application.currentMenu = Mode::InteractiveView;
-            draw(application.box[1]);
-            draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
-            break;
-
-        case Action::ModeCurveEdition:
-            application.currentMenu = Mode::CurveMenu;
-            draw(application.box[1]);
-            draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
-            break;
-
-        case Action::VisualizationZoomInX:
-            zoomInX(application.graph);
-            break;
-
-        case Action::VisualizationZoomOutX:
-            zoomOutX(application.graph);
-            break;
-
-        case Action::VisualizationZoomInY:
-            zoomInY(application.graph);
-            break;
-
-        case Action::VisualizationZoomOutY:
-            zoomOutY(application.graph);
-            break;
-
-        case Action::VisualizationZoomIn:
-            zoomIn(application.graph);
-            break;
-
-        case Action::VisualizationZoomOut:
-            zoomOut(application.graph);
-            break;
-
-        case Action::VisualizationPanLeft:
-            panLeft(application.graph);
-            break;
-
-        case Action::VisualizationPanRight:
-            panRight(application.graph);
-            break;
-
-        case Action::VisualizationPanUp:
-            panUp(application.graph);
-            break;
-
-        case Action::VisualizationPanDown:
-            panDown(application.graph);
-            break;
-
-        case Action::VisualizationResetView:
-            reset(application.graph);
-            break;
-        
-        case Action::CurveSelectUp:
-            selectPreviousCurve(application);
-            break;
-
-        case Action::CurveSelectDown:
-            selectNextCurve(application);
-            break;
-
-        case Action::CurveSelectFirst:
-            selectFirstCurve(application);
-            break;
-
-        case Action::CurveSelectLast:
-            selectLastCurve(application);
-            break;
-
-        case Action::CurveShowAll:
-            application.showAllCurves = true;
-            break;
-
-        case Action::CurveShowCurrentOnly:
-            application.showAllCurves = false;
-            break;
-
-        case Action::CurveRemoveCurrent:
-            removeCurrentCurve(application);
-            break;
-
-        case Action::CurveAddSinus:
-            application.currentCurve = insert(application.curves, application.currentCurve, createSinus());
-            break;
-
-        case Action::CurveAddCosinus:
-            application.currentCurve = insert(application.curves, application.currentCurve, createCosinus());
-            break;
-
-        case Action::CurveAddTangent:
-            application.currentCurve = insert(application.curves, application.currentCurve, createTangent());
-            break;
-
-        case Action::CurveAddPolynomial:
-            application.currentCurve = insert(application.curves, application.currentCurve, createPolynomial());
-            break;
-            
-        case Action::CurveAddExponential:
-            application.currentCurve = insert(application.curves, application.currentCurve, createExponential());
-            break;
-       
-        case Action::CurveAddLogarithmic:
-            application.currentCurve = insert(application.curves, application.currentCurve, createLogarithmic());
-            break;
-        default:
+            switch (resolved.action) {
+            case Action::Quit:
+                application.applicationIsRunning = false;
                 break;
+
+            case Action::ModeMain:
+                application.currentMenu = Mode::HomeMenu;
+                draw(application.box[1]);
+                draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
+                break;
+
+            case Action::ModeInteractiveView:
+                application.currentMenu = Mode::InteractiveView;
+                draw(application.box[1]);
+                draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
+                break;
+
+            case Action::ModeCurveEdition:
+                application.currentMenu = Mode::CurveMenu;
+                draw(application.box[1]);
+                draw(application.menu[static_cast<std::size_t>(application.currentMenu)]);
+                break;
+
+            case Action::VisualizationZoomInX:
+                zoomInX(application.graph);
+                break;
+
+            case Action::VisualizationZoomOutX:
+                zoomOutX(application.graph);
+                break;
+
+            case Action::VisualizationZoomInY:
+                zoomInY(application.graph);
+                break;
+
+            case Action::VisualizationZoomOutY:
+                zoomOutY(application.graph);
+                break;
+
+            case Action::VisualizationZoomIn:
+                zoomIn(application.graph);
+                break;
+
+            case Action::VisualizationZoomOut:
+                zoomOut(application.graph);
+                break;
+
+            case Action::VisualizationPanLeft:
+                panLeft(application.graph);
+                break;
+
+            case Action::VisualizationPanRight:
+                panRight(application.graph);
+                break;
+
+            case Action::VisualizationPanUp:
+                panUp(application.graph);
+                break;
+
+            case Action::VisualizationPanDown:
+                panDown(application.graph);
+                break;
+
+            case Action::VisualizationResetView:
+                reset(application.graph);
+                break;
+
+            case Action::CurveSelectUp:
+                application.curves.selectPrevious();
+                break;
+
+            case Action::CurveSelectDown:
+                application.curves.selectNext();
+                break;
+
+            case Action::CurveSelectFirst:
+                application.curves.selectFirst();
+                break;
+
+            case Action::CurveSelectLast:
+                application.curves.selectLast();
+                break;
+
+            case Action::CurveRemoveCurrent:
+                application.curves.removeCurrent();
+                break;
+
+            case Action::CurveShowAll:
+                application.showAllCurves = true;
+                break;
+
+            case Action::CurveShowCurrentOnly:
+                application.showAllCurves = false;
+                break;
+
+            case Action::CurveAddSinus:
+                application.curves.insertAfterCurrent(createSinus());
+                break;
+
+            case Action::CurveAddCosinus:
+                application.curves.insertAfterCurrent(createCosinus());
+                break;
+
+            case Action::CurveAddTangent:
+                application.curves.insertAfterCurrent(createTangent());
+                break;
+
+            case Action::CurveAddPolynomial:
+                application.curves.insertAfterCurrent(createPolynomial());
+                break;
+            
+            case Action::CurveAddExponential:
+                application.curves.insertAfterCurrent(createExponential());
+                break;
+       
+            case Action::CurveAddLogarithmic:
+                application.curves.insertAfterCurrent(createLogarithmic());
+                break;
+            default:
+                break;
+            }
+
+            draw(application);
+            clearBoxContent(application.box[2]);
+            drawInformationBox(application);
+        }
+    }
+
+    void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
+        Curve* currentCurve = application.curves.current();
+
+        if (!currentCurve) {
+            return;
         }
 
-       draw(application);
-       clearBoxContent(application.box[2]);
-       drawInformationBox(application);
-    }
-}
-
-void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
-    if (application.currentCurve) {
         int index = -1;
         double increment = 0.1;
 
@@ -237,8 +235,8 @@ void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
         case HiddenAction::CurveCoefEditDecrease7: index = 6; increment *= 1; break;
         case HiddenAction::CurveCoefEditDecrease8: index = 7; increment *= 1; break;
         case HiddenAction::CurveCoefEditDecrease9: index = 8; increment *= 1; break;
-            default:
-                break;
+        default:
+            break;
         }
         
         if (index < 0) {
@@ -247,55 +245,65 @@ void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
 
         const auto parameterIndex = static_cast<std::size_t>(index);
 
-        if (parameterIndex >= application.currentCurve->curve.parameterValues.size()) {
+        if (parameterIndex >= currentCurve->parameterValues.size()) {
             return;
         }
 
-        modifyParameter(application.currentCurve->curve, increment, parameterIndex);
+        modifyParameter(*currentCurve, increment, parameterIndex);
     }
 }
-}
 
 namespace {
-void draw(const Application& application) {
-    draw(application.graph.box);
-    drawAxis(application.graph);
-    if (application.showAllCurves)
-        drawForward(application.curves, application.graph);
-    else if (application.currentCurve)
-        draw(application.currentCurve->curve, application.graph);
-}
-}
+    void draw(const Application& application) {
+        draw(application.graph.box);
+        drawAxis(application.graph);
 
-namespace {
-void saveCurveList(const Application& application) {
-    std::fstream f;
-
-    std::string fname = "curves.c21";
-
-    f.open(fname, std::ios::out);				
-    
-    if (f.is_open()) {
-        f << "\n n_curves = " << application.curves.size << "\n";
-
-        const Item* currentCurve = application.curves.first;
-        while (currentCurve) {
-            f << "\n [curve]\n";
-            f << " type = " << toStringCurveTypeShort(currentCurve->curve.curveType) << "\n";
-            f << " coef = { ";
-            for (std::size_t j = 0; j < currentCurve->curve.parameterValues.size(); ++j) {
-                if (j != currentCurve->curve.parameterValues.size() - 1)
-                    f << currentCurve->curve.parameterValues.at(j) << ", ";
-                else
-                    f << currentCurve->curve.parameterValues.at(j) << " }\n";
-            }
-            f << " char = " << currentCurve->curve.curveChar << "\n";
-            f << " color = " << static_cast<int>(currentCurve->curve.color) << "\n";
-            
-            currentCurve = currentCurve->next;
+        if (application.showAllCurves) {
+            drawCurves(application.curves, application.graph);
         }
-        f.close();							
-
+        else if (const Curve* currentCurve = application.curves.current()) {
+            draw(*currentCurve, application.graph);
+        }
     }
 }
+
+namespace {
+    void drawCurves(const CurveCollection& curves, const Graph& graph) {
+        for (const Curve& curve : curves) {
+            draw(curve, graph);
+        }
+    }
+}
+
+namespace {
+    void saveCurveList(const Application& application) {
+        std::fstream f;
+
+        std::string fname = "curves";
+
+        f.open(fname, std::ios::out);
+    
+        if (f.is_open()) {
+            f << "\n n_curves = " << application.curves.size() << "\n";
+
+            for (const Curve& curve : application.curves) {
+                f << "\n [curve]\n";
+                f << " type = " << toStringCurveTypeShort(curve.curveType) << "\n";
+                f << " coef = { ";
+
+                for (std::size_t j = 0; j < curve.parameterValues.size(); ++j) {
+                    if (j != curve.parameterValues.size() - 1) {
+                        f << curve.parameterValues.at(j) << ", ";
+                    }
+                    else {
+                        f << curve.parameterValues.at(j) << " }\n";
+                    }
+                }
+                f << " char = " << curve.curveChar << "\n";
+                f << " color = " << static_cast<int>(curve.color) << "\n";
+            }
+
+            f.close();
+        }
+    }
 }

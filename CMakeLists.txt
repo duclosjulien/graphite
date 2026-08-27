@@ -59,8 +59,6 @@ add_library(graphite_core
         src/box.cpp
         src/colors.cpp
         src/curve.cpp
-        src/curvelist.cpp
-        src/curveManipulation.cpp
         src/graph.cpp
         src/information.cpp
         src/menu.cpp

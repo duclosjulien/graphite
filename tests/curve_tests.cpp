@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 #include "curve.h"
-#include "curvelist.h"
+#include "curveCollection.h"
 #include "catch2/catch_approx.hpp"
 
 TEST_CASE("createPolynomial accepts the maximum degree") {
@@ -129,21 +129,19 @@ TEST_CASE("copying a curve creates independent parameter storage") {
 }
 
 TEST_CASE("inserting a curve copies independent state") {
-    CurvesList curves{};
-    initialize(curves);
+    CurveCollection curves;
 
     const Curve original = createSinus();
-    Item* inserted = insert(curves, nullptr, original);
+    Curve& inserted = curves.insertAfterCurrent(original);
 
-    modifyParameter(inserted->curve, 0.5, 0);
+    modifyParameter(inserted, 0.5, 0);
 
     REQUIRE(original.parameterValues[0] == 1.0);
-    REQUIRE(inserted->curve.parameterValues[0] == 1.5);
+    REQUIRE(inserted.parameterValues[0] == 1.5);
 
-    clear(curves);
-    REQUIRE(curves.size == 0);
-    REQUIRE(curves.first == nullptr);
-    REQUIRE(curves.last == nullptr);
+    REQUIRE_FALSE(curves.empty());
+    REQUIRE(curves.size() == 1);
+    REQUIRE(curves.current() == &inserted);
 }
 
 TEST_CASE("process returns the mathematical sine value") {

@@ -108,3 +108,39 @@ void CurveCollection::clear() {
     curves_.clear();
     current_ = curves_.end();
 }
+
+CurveCollection::CurveWindow CurveCollection::currentWindow() const {
+    CurveWindow curves{};
+
+    if (current_ == curves_.end()) {
+        return curves;
+    }
+
+    curves[2] = &*current_;
+
+    const_iterator previous = current_;
+
+    for (std::size_t index = 2; index > 0;) {
+        if (previous == curves_.cbegin()) {
+            break;
+        }
+
+        --previous;
+        --index;
+        curves[index] = &*previous;
+    }
+
+    const_iterator next = current_;
+
+    for (std::size_t index = 3; index < curves.size(); ++index) {
+        ++next;
+
+        if (next == curves_.cend()) {
+            break;
+        }
+
+        curves[index] = &*next;
+    }
+
+    return curves;
+}

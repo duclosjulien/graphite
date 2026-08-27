@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "curvelist.h"
+#include "curveCollection.h"
 #include "graph.h"
 #include "menu.h"
 
@@ -22,8 +22,7 @@ struct Application {
 	Mode currentMenu;
 
 	bool showAllCurves;
-	CurvesList curves;
-	Item* currentCurve;
+	CurveCollection curves;
 };
 
 void initialize(Application& application, int width = 120, int height = 30);

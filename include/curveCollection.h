@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <list>
+#include <array>
 
 #include "curve.h"
 
@@ -14,6 +15,7 @@ public:
     CurveCollection(CurveCollection&&) = delete;
     CurveCollection& operator=(CurveCollection&&) = delete;
 
+    using CurveWindow = std::array<const Curve*, 5>;
     using const_iterator = std::list<Curve>::const_iterator;
 
     const_iterator begin() const;
@@ -29,6 +31,7 @@ public:
     bool selectPrevious();
     bool selectFirst();
     bool selectLast();
+    [[nodiscard]] CurveWindow currentWindow() const;
 
     [[nodiscard]] Curve* current();
     [[nodiscard]] const Curve* current() const;
