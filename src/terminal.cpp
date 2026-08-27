@@ -78,3 +78,9 @@ void setcolor(Color background, Color foreground) {
 
     std::cout << "\033[" << bg << ";" << fg << "m";
 }
+
+void restoreTerminal() {
+    std::cout << "\033[0m";
+    show(true);              
+    std::cout << '\n';
+}
