@@ -1,6 +1,6 @@
 # Graphite
 
-Graphite is a small terminal graphing calculator written in C++.
+Graphite is a small terminal function grapher written in C++.
 
 It lets you create and display different types of curves directly in the terminal, then modify their parameters interactively.
 
@@ -35,5 +35,10 @@ Then run:
 * C++20 compatible compiler
 * CMake 3.19+
 * macOS or Linux
+* ANSI-compatible terminal
+
+## Development
+
+Graphite is tested with Catch2 and CTest. GitHub Actions verifies warning-clean builds with GCC and Clang and runs AddressSanitizer and UndefinedBehaviorSanitizer checks.
 
 
