@@ -1,10 +1,12 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstddef>
+#include <numbers>
 #include <stdexcept>
 
 #include "curve.h"
 #include "curvelist.h"
+#include "catch2/catch_approx.hpp"
 
 TEST_CASE("createPolynomial accepts the maximum degree") {
     const Curve curve = createPolynomial(maxPolynomialDegree);
@@ -142,4 +144,20 @@ TEST_CASE("inserting a curve copies independent state") {
     REQUIRE(curves.size == 0);
     REQUIRE(curves.first == nullptr);
     REQUIRE(curves.last == nullptr);
+}
+
+TEST_CASE("process returns the mathematical sine value") {
+    const Curve curve = createSinus(
+        2.0, // amplitude
+        1.0, // frequency
+        0.0, // phase
+        3.0  // offset
+    );
+
+    const double result = process(
+        std::numbers::pi / 2.0,
+        curve
+    );
+
+    REQUIRE(result == Catch::Approx(5.0));
 }

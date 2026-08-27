@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iterator>
 #include <string_view>
+#include <algorithm>
 
 #include "information.h"
 #include "terminal.h"
@@ -61,13 +62,20 @@ void drawInformationVisualization(const Application& application) {
 
     RealPoint realCenter = boxToGraphCoord(center, application.graph),
               zoom = { application.graph.zoomXFactor, application.graph.zoomYFactor },
-              minValue = boxToGraphCoord({ center.x - halfWidth, center.y - halfHeight }, application.graph),
-              maxValue = boxToGraphCoord({ center.x + halfWidth, center.y + halfHeight }, application.graph);
+              topLeftValue = boxToGraphCoord({ center.x - halfWidth, center.y - halfHeight }, application.graph),
+              bottomRightValue = boxToGraphCoord({ center.x + halfWidth, center.y + halfHeight }, application.graph);
 
     std::string label[] = { " X-axis", " Y-axis", " Offset", " Center", " Zoom" };
+
+    const double minimumX = std::min(topLeftValue.x, bottomRightValue.x);
+    const double maximumX = std::max(topLeftValue.x, bottomRightValue.x);
+
+    const double minimumY = std::min(topLeftValue.y, bottomRightValue.y);
+    const double maximumY = std::max(topLeftValue.y, bottomRightValue.y);
+
     std::string info[] =  {
-        toString({minValue.x, maxValue.x}, 2, "[", ", ", "]"),
-        toString({minValue.y, maxValue.y}, 2, "[", ", ", "]"),
+        toString({minimumX, maximumX}, 2, "[", ", ", "]"),
+        toString({minimumY, maximumY}, 2, "[", ", ", "]"),
         toString(offset),
         toString(realCenter),
         toString(zoom, 2, "", " X ", "")
