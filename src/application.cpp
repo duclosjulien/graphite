@@ -45,7 +45,7 @@ void initialize(Application& application, int width, int height) {
 
     populateMenu(application.menu[0], homeName, homeAction, homeKey, sizeActionHome);
     populateMenu(application.menu[1], visualizationName, visualizationAction, visualizationKey, sizeActionVisualization);
-    populateMenu(application.menu[2], curveName, curveAction, curveKey, sizeActionCurve, curveHiddenAction, hiddenCurveKey, sizeHiddenMenu);
+    populateMenu(application.menu[2], curveName, curveAction, curveKey, sizeActionCurve, curveHiddenAction, hiddenCurveKey, sizeHiddenActionCurve);
 }
 
 
@@ -241,9 +241,17 @@ void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
                 break;
         }
         
-        if (index >= 0)
-        modifyParameter(application.currentCurve->curve, increment, static_cast<std::size_t>(index));
+        if (index < 0) {
+            return;
+        }
 
+        const auto parameterIndex = static_cast<std::size_t>(index);
+
+        if (parameterIndex >= application.currentCurve->curve.parameterValues.size()) {
+            return;
+        }
+
+        modifyParameter(application.currentCurve->curve, increment, parameterIndex);
     }
 }
 }
