@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "curve.h"
+#include "curvelist.h"
 
 TEST_CASE("createPolynomial accepts the maximum degree") {
     const Curve curve = createPolynomial(maxPolynomialDegree);
@@ -113,4 +114,32 @@ TEST_CASE("modifyParameter handles maximum-degree polynomial boundaries") {
     const auto values = curve.parameterValues;
     modifyParameter(curve, 0.5, maxPolynomialDegree + 1);
     REQUIRE(curve.parameterValues == values);
+}
+
+TEST_CASE("copying a curve creates independent parameter storage") {
+    const Curve original = createSinus();
+    Curve copy = original;
+
+    modifyParameter(copy, 0.5, 0);
+
+    REQUIRE(copy.parameterValues[0] != original.parameterValues[0]);
+    REQUIRE(original.parameterValues[0] == 1.0);
+}
+
+TEST_CASE("inserting a curve copies independent state") {
+    CurvesList curves{};
+    initialize(curves);
+
+    const Curve original = createSinus();
+    Item* inserted = insert(curves, nullptr, original);
+
+    modifyParameter(inserted->curve, 0.5, 0);
+
+    REQUIRE(original.parameterValues[0] == 1.0);
+    REQUIRE(inserted->curve.parameterValues[0] == 1.5);
+
+    clear(curves);
+    REQUIRE(curves.size == 0);
+    REQUIRE(curves.first == nullptr);
+    REQUIRE(curves.last == nullptr);
 }
