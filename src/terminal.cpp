@@ -13,9 +13,6 @@ void show(bool visible) {
     std::cout << (visible ? "\033[?25h" : "\033[?25l");
 }
 
-void setcp(int) {
-    // No-op on macOS/Linux.
-}
 
 int getch() {
     termios oldSettings{};
@@ -81,6 +78,6 @@ void setcolor(Color background, Color foreground) {
 
 void restoreTerminal() {
     std::cout << "\033[0m";
-    show(true);              
+    show(true);
     std::cout << '\n';
 }

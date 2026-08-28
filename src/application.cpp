@@ -54,7 +54,6 @@ void run(Application& application) {
     loadSavedCurves(application);
 
     show(false);
-    setcp(437);
 
     draw();
     draw(application.box, boxSize);
