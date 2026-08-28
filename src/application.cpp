@@ -1,9 +1,11 @@
 #include <fstream>
+#include <iostream>
 
 #include "actions.h"
 #include "application.h"
 #include "terminal.h"
 #include "information.h"
+#include "curvePersistence.h"
 
 namespace {
     void doAction(Application& application);
@@ -11,6 +13,7 @@ namespace {
     void draw(const Application& application);
     void saveCurveList(const Application& application);
     void drawCurves(const CurveCollection& curves, const Graph& graph);
+    void loadSavedCurves(Application& application);
 }
 
 void initialize(Application& application, int width, int height) {
@@ -48,6 +51,8 @@ void initialize(Application& application, int width, int height) {
 
 
 void run(Application& application) {
+    loadSavedCurves(application);
+
     show(false);
     setcp(437);
 
@@ -304,6 +309,30 @@ namespace {
             }
 
             f.close();
+        }
+    }
+}
+
+namespace {
+    void loadSavedCurves(Application& application) {
+        std::ifstream file{"curves"};
+
+        if (!file) {
+            return;
+        }
+
+        CurveLoadResult result = loadCurves(file);
+
+        if (!result.succeeded()) {
+            std::cerr << "Could not load saved curves: "
+                      << result.error << '\n';
+            return;
+        }
+
+        application.curves.clear();
+
+        for (const Curve& curve : result.curves) {
+            application.curves.insertAfterCurrent(curve);
         }
     }
 }

@@ -124,6 +124,28 @@ Curve createPolynomial(const std::size_t degree, const char curveChar, const Col
 	return curve;
 }
 
+Curve createPolynomial(
+	const std::vector<double>& coefficients,
+	const char curveChar,
+	const Color color
+) {
+	if (coefficients.empty()) {
+		throw std::invalid_argument(
+			"a polynomial requires at least one coefficient"
+		);
+	}
+
+	Curve curve = createPolynomial(
+		coefficients.size() - 1,
+		curveChar,
+		color
+	);
+
+	curve.parameterValues = coefficients;
+
+	return curve;
+}
+
 Curve createExponential(
 	const double verticalScale,
 	const double base,
