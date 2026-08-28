@@ -14,6 +14,12 @@ It lets you create and display different types of curves directly in the termina
 * Built with C++20 and CMake
 * Tests with Catch2
 
+## Supported platforms
+
+Graphite supports macOS and Linux terminals with POSIX `termios` support.
+
+Windows is not currently supported.
+
 ## Build
 
 ```bash
