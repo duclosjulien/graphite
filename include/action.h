@@ -39,22 +39,17 @@ enum class Action {
 
 enum class HiddenAction {
 	NoAction,
-	CurveCoefEditIncrease1,			// [ 9]
-	CurveCoefEditIncrease2,			// [ 9]
-	CurveCoefEditIncrease3,			// [ 9]
-	CurveCoefEditIncrease4,			// [ 9]
-	CurveCoefEditIncrease5,			// [ 9]
-	CurveCoefEditIncrease6,			// [ 9]
-	CurveCoefEditIncrease7,			// [ 9]
-	CurveCoefEditIncrease8,			// [ 9]
-	CurveCoefEditIncrease9,			// [ 9]
-	CurveCoefEditDecrease1,			// [ 9]
-	CurveCoefEditDecrease2,			// [ 9]
-	CurveCoefEditDecrease3,			// [ 9]
-	CurveCoefEditDecrease4,			// [ 9]
-	CurveCoefEditDecrease5,			// [ 9]
-	CurveCoefEditDecrease6,			// [ 9]
-	CurveCoefEditDecrease7,			// [ 9]
-	CurveCoefEditDecrease8,			// [ 9]
-	CurveCoefEditDecrease9,			// [ 9]
+
+	CurveParameterSelect1,
+	CurveParameterSelect2,
+	CurveParameterSelect3,
+	CurveParameterSelect4,
+	CurveParameterSelect5,
+	CurveParameterSelect6,
+	CurveParameterSelect7,
+	CurveParameterSelect8,
+	CurveParameterSelect9,
+
+	CurveParameterIncrease,
+	CurveParameterDecrease
 };
