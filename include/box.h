@@ -41,5 +41,3 @@ void initialize(Box& box,
 void draw(const Box& box);
 
 void draw(const Box box[], std::size_t size);
-
-void draw();

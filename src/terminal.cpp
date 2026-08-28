@@ -4,6 +4,7 @@
 #include <iostream>
 #include <termios.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 
 void gotoxy(int x, int y) {
     std::cout << "\033[" << y << ";" << x << "H";
@@ -12,7 +13,6 @@ void gotoxy(int x, int y) {
 void show(bool visible) {
     std::cout << (visible ? "\033[?25h" : "\033[?25l");
 }
-
 
 int getch() {
     termios oldSettings{};
@@ -77,7 +77,42 @@ void setcolor(Color background, Color foreground) {
 }
 
 void restoreTerminal() {
-    std::cout << "\033[0m";
-    show(true);
-    std::cout << '\n';
+    std::cout
+        << "\033[0m"
+        << "\033[?25h"
+        << "\033[?1049l"
+        << std::flush;
+}
+
+std::optional<TerminalSize> getTerminalSize() {
+    winsize windowSize{};
+
+    if (
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, &windowSize) == -1 ||
+        windowSize.ws_col == 0 ||
+        windowSize.ws_row == 0
+    ) {
+        return std::nullopt;
+    }
+
+    return TerminalSize{
+        .width = static_cast<int>(windowSize.ws_col),
+        .height = static_cast<int>(windowSize.ws_row)
+    };
+}
+
+void clearScreen() {
+    std::cout << "\033[2J\033[H";
+}
+
+void enterAlternateScreen() {
+    std::cout
+        << "\033[?1049h"
+        << "\033[2J"
+        << "\033[H"
+        << std::flush;
+}
+
+void leaveAlternateScreen() {
+    std::cout << "\033[?1049l";
 }

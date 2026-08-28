@@ -3,6 +3,7 @@ add_executable(graphite_tests
         curve_tests.cpp
         graph_tests.cpp
         curveCollection_tests.cpp
+        layout_tests.cpp
 )
 
 target_link_libraries(graphite_tests
