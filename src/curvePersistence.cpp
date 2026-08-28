@@ -6,6 +6,7 @@
 #include <utility>
 #include <optional>
 #include <iostream>
+#include <string_view>
 
 #include "curvePersistence.h"
 #include "application.h"
@@ -38,21 +39,14 @@ namespace {
     std::optional<std::string> parseField(std::string_view line, std::string_view expectedName) {
         constexpr char delimiter = '=';
 
-        const std::size_t firstDelimiter = line.find(delimiter);
+        const std::size_t delimiterPosition = line.find(delimiter);
 
-        if (firstDelimiter == std::string_view::npos) {
+        if (delimiterPosition == std::string_view::npos) {
             return std::nullopt;
         }
 
-        const std::size_t secondDelimiter =
-            line.find(delimiter, firstDelimiter + 1);
-
-        if (secondDelimiter != std::string_view::npos) {
-            return std::nullopt; // More than one '='
-        }
-
-        const std::string name = trim(line.substr(0, firstDelimiter));
-        const std::string value = trim(line.substr(firstDelimiter + 1));
+        const std::string name = trim(line.substr(0, delimiterPosition));
+        const std::string value = trim(line.substr(delimiterPosition + 1));
 
         if (name != expectedName || value.empty()) {
             return std::nullopt;
@@ -355,7 +349,6 @@ CurveLoadResult loadCurves(std::istream& input) {
     }
 
     std::vector<Curve> curves;
-    curves.reserve(*curveCount);
 
     for (std::size_t i = 0; i < *curveCount; ++i) {
         // [curve]
