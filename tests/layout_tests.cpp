@@ -1,4 +1,7 @@
+#include <catch2/catch_test_macros.hpp>
+
 #include "application.h"
+#include "rectangle.h"
 
 [[nodiscard]] bool isTerminalSizeSupported(int width, int height) {
     return width >= minimumTerminalWidth &&
