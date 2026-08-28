@@ -4,13 +4,11 @@
 #include <cctype>
 #include <cmath>
 #include <utility>
-
-#include "curvePersistence.h"
-
+#include <optional>
 #include <iostream>
 
+#include "curvePersistence.h"
 #include "application.h"
-
 
 namespace {
     std::string trim(std::string_view text) {
