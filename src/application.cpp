@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <optional>
 
 #include "actions.h"
 #include "application.h"

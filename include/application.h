@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <optional>
 
 #include "curveCollection.h"
 #include "graph.h"
