@@ -80,9 +80,7 @@ void initialize(Application& application, int width, int height) {
 void run(Application& application) {
     loadSavedCurves(application);
 
-    show(false);
-
-    draw();
+    clearScreen();
     draw(application.box, boxSize);
 
     doAction(application);

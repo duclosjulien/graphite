@@ -87,13 +87,3 @@ void draw(const Box box[], std::size_t size) {
         draw(box[i]);
     }
 }
-
-void draw() {
-    setColors({ Color::wht, Color::wht });
-
-    for (int x{}; x < 120; ++x) {
-        for (int y{}; y < 30; ++y) {
-            gotoxy(x, y); std::cout << " ";
-        }
-    }
-}

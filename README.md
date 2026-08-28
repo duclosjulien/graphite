@@ -40,8 +40,15 @@ Then run:
 
 * C++20 compatible compiler
 * CMake 3.19+
-* macOS or Linux
-* ANSI-compatible terminal
+- macOS or Linux
+- ANSI-compatible terminal
+- Minimum terminal size: 118 × 29
+
+## Terminal
+
+Graphite supports terminals that are at least 118 columns by 29 rows**.
+
+The layout adapts to the terminal size when the app starts. If you resize the terminal while Graphite is running, restart the app to update the layout.
 
 ## Development
 
