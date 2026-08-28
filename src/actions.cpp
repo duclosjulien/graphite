@@ -3,7 +3,7 @@
 const std::size_t sizeActionHome = 3;
 const std::size_t sizeActionVisualization = 12;
 const std::size_t sizeActionCurve = 14;
-const std::size_t sizeHiddenActionCurve = 18;
+const std::size_t sizeHiddenActionCurve = 11;
 
 const std::string homeName[sizeActionHome] {
 	" V : Interactive view",
@@ -122,43 +122,29 @@ const char curveKey[sizeActionCurve] {
 };
 
 const HiddenAction curveHiddenAction[sizeHiddenActionCurve] {
-	HiddenAction::CurveCoefEditIncrease1,
-	HiddenAction::CurveCoefEditIncrease2,
-	HiddenAction::CurveCoefEditIncrease3,
-	HiddenAction::CurveCoefEditIncrease4,
-	HiddenAction::CurveCoefEditIncrease5,
-	HiddenAction::CurveCoefEditIncrease6,
-	HiddenAction::CurveCoefEditIncrease7,
-	HiddenAction::CurveCoefEditIncrease8,
-	HiddenAction::CurveCoefEditIncrease9,
-	HiddenAction::CurveCoefEditDecrease1,
-	HiddenAction::CurveCoefEditDecrease2,
-	HiddenAction::CurveCoefEditDecrease3,
-	HiddenAction::CurveCoefEditDecrease4,
-	HiddenAction::CurveCoefEditDecrease5,
-	HiddenAction::CurveCoefEditDecrease6,
-	HiddenAction::CurveCoefEditDecrease7,
-	HiddenAction::CurveCoefEditDecrease8,
-	HiddenAction::CurveCoefEditDecrease9
+	HiddenAction::CurveParameterSelect1,
+	HiddenAction::CurveParameterSelect2,
+	HiddenAction::CurveParameterSelect3,
+	HiddenAction::CurveParameterSelect4,
+	HiddenAction::CurveParameterSelect5,
+	HiddenAction::CurveParameterSelect6,
+	HiddenAction::CurveParameterSelect7,
+	HiddenAction::CurveParameterSelect8,
+	HiddenAction::CurveParameterSelect9,
+	HiddenAction::CurveParameterIncrease,
+	HiddenAction::CurveParameterDecrease
 };
 
 const char hiddenCurveKey[sizeHiddenActionCurve] {
-	49,
-	50,
-	51,
-	52,
-	53,
-	54,
-	55,
-	56,
-	57,
-	59,
-	60,
-	61,
-	62,
-	63,
-	64,
-	65,
-	66,
-	67
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'+',
+	'-'
 };

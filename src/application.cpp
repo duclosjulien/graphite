@@ -1,11 +1,13 @@
 #include <fstream>
 #include <iostream>
+#include <optional>
 
 #include "actions.h"
 #include "application.h"
 #include "terminal.h"
 #include "information.h"
 #include "curvePersistence.h"
+
 
 namespace {
     void doAction(Application& application);
@@ -30,9 +32,35 @@ void initialize(Application& application, int width, int height) {
     const int graphLenght = application.width - spacing - visualizationWidth;
     const int graphHeight = application.height - informationHeight - spacing;
 
-    IntRectangle graphRect = { { spacing, spacing }, { graphLenght - 3 * spacing, graphHeight - 3 * spacing } };
-    IntRectangle menuRect = { { graphLenght, spacing }, { application.width - 3 * spacing, graphHeight - 3 * spacing } };
-    IntRectangle infoRect = { { spacing , graphHeight}, {application.width - 3 * spacing, application.height - 3 * spacing}};
+    IntRectangle graphRect = {
+        {spacing, spacing},
+        {
+            graphLenght - 2 * spacing,
+            graphHeight - spacing
+        }
+    };
+
+    IntRectangle menuRect = {
+        {
+            graphLenght - spacing,
+            spacing
+        },
+        {
+            application.width - 2 * spacing,
+            graphHeight - spacing
+        }
+    };
+
+    IntRectangle infoRect = {
+        {
+            spacing,
+            graphHeight
+        },
+        {
+            application.width - 2 * spacing,
+            application.height - 2 * spacing
+        }
+    };
 
     initialize(application.box[0], graphRect, "Graphic");
     initialize(application.box[1], menuRect, "Action Menu");
@@ -209,51 +237,91 @@ namespace {
     }
 
     void handleHiddenAction(Application& application, HiddenAction hiddenAction) {
-        Curve* currentCurve = application.curves.current();
+    Curve* currentCurve = application.curves.current();
 
-        if (!currentCurve) {
-            return;
-        }
+    if (!currentCurve) {
+        application.selectedParameterIndex.reset();
+        return;
+    }
 
-        int index = -1;
-        double increment = 0.1;
+    std::optional<std::size_t> requestedIndex;
 
-        switch (hiddenAction) {
-        case HiddenAction::CurveCoefEditIncrease1: index = 0; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease2: index = 1; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease3: index = 2; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease4: index = 3; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease5: index = 4; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease6: index = 5; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease7: index = 6; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease8: index = 7; increment *= -1; break;
-        case HiddenAction::CurveCoefEditIncrease9: index = 8; increment *= -1; break;
+    switch (hiddenAction) {
+        case HiddenAction::CurveParameterSelect1:
+            requestedIndex = 0;
+            break;
 
-        case HiddenAction::CurveCoefEditDecrease1: index = 0; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease2: index = 1; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease3: index = 2; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease4: index = 3; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease5: index = 4; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease6: index = 5; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease7: index = 6; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease8: index = 7; increment *= 1; break;
-        case HiddenAction::CurveCoefEditDecrease9: index = 8; increment *= 1; break;
+        case HiddenAction::CurveParameterSelect2:
+            requestedIndex = 1;
+            break;
+
+        case HiddenAction::CurveParameterSelect3:
+            requestedIndex = 2;
+            break;
+
+        case HiddenAction::CurveParameterSelect4:
+            requestedIndex = 3;
+            break;
+
+        case HiddenAction::CurveParameterSelect5:
+            requestedIndex = 4;
+            break;
+
+        case HiddenAction::CurveParameterSelect6:
+            requestedIndex = 5;
+            break;
+
+        case HiddenAction::CurveParameterSelect7:
+            requestedIndex = 6;
+            break;
+
+        case HiddenAction::CurveParameterSelect8:
+            requestedIndex = 7;
+            break;
+
+        case HiddenAction::CurveParameterSelect9:
+            requestedIndex = 8;
+            break;
+
         default:
             break;
-        }
-        
-        if (index < 0) {
-            return;
-        }
-
-        const auto parameterIndex = static_cast<std::size_t>(index);
-
-        if (parameterIndex >= currentCurve->parameterValues.size()) {
-            return;
-        }
-
-        modifyParameter(*currentCurve, increment, parameterIndex);
     }
+
+    if (requestedIndex) {
+        if (*requestedIndex < currentCurve->parameterValues.size()) {
+            application.selectedParameterIndex = *requestedIndex;
+        }
+
+        return;
+    }
+
+    double increment{};
+
+    switch (hiddenAction) {
+        case HiddenAction::CurveParameterIncrease:
+            increment = 0.1;
+            break;
+
+        case HiddenAction::CurveParameterDecrease:
+            increment = -0.1;
+            break;
+
+        default:
+            return;
+    }
+
+    if (!application.selectedParameterIndex) {
+        return;
+    }
+
+    const std::size_t parameterIndex = *application.selectedParameterIndex;
+
+    if (parameterIndex >= currentCurve->parameterValues.size()) {
+        return;
+    }
+
+    modifyParameter(*currentCurve, increment, parameterIndex);
+}
 }
 
 namespace {

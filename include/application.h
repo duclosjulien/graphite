@@ -14,6 +14,7 @@ enum class Mode { HomeMenu, InteractiveView, CurveMenu};
 struct Application {
 	bool applicationIsRunning; 
 	int width, height, layoutOffset;
+	std::optional<std::size_t> selectedParameterIndex = std::nullopt;
 
 	Box box[boxSize];
 	Menu menu[menuSize];

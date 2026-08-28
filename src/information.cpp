@@ -3,6 +3,7 @@
 #include <iterator>
 #include <string_view>
 #include <algorithm>
+#include <sstream>
 
 #include "information.h"
 #include "terminal.h"
@@ -89,8 +90,7 @@ void drawInformationVisualization(const Application& application) {
 }
 
     void drawInformationCurve(const Application& application) {
-    const CurveCollection::CurveWindow curves =
-        application.curves.currentWindow();
+    const CurveCollection::CurveWindow curves = application.curves.currentWindow();
 
     clearBoxContent(application.box[2]);
     setColors(application.box[2].textColors);
@@ -124,6 +124,52 @@ void drawInformationVisualization(const Application& application) {
                 << toString(*curve, 2);
         }
     }
+
+    std::ostringstream status;
+
+    status << "     Edit: [1-9] select  [+/-] adjust";
+
+    const Curve* currentCurve = application.curves.current();
+
+    if (
+        currentCurve &&
+        application.selectedParameterIndex &&
+        *application.selectedParameterIndex <
+            currentCurve->parameterValues.size()
+    ) {
+        const std::size_t index =
+            *application.selectedParameterIndex;
+
+        status
+            << "  |  Selected " << index + 1
+            << ": " << currentCurve->parameterNames[index]
+            << " = " << std::fixed << std::setprecision(2)
+            << currentCurve->parameterValues[index];
+    }
+    else {
+        status << "  |  Selected: none";
+    }
+
+    const Box& informationBox = application.box[2];
+
+    setColors(informationBox.outlineColors);
+
+    const int bottomBorderY =
+        informationBox.geometry.topLeft.y
+        + getHeight(informationBox.geometry);
+
+    gotoxy(
+        informationBox.geometry.topLeft.x + 2,
+        bottomBorderY
+    );
+
+    const int statusWidth =
+        getWidth(informationBox.geometry) - 3;
+
+    std::cout
+        << std::left
+        << std::setw(statusWidth)
+        << status.str();
 }
 
 std::string toStringCurveType(CurveType curve) {
