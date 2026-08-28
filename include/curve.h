@@ -59,6 +59,12 @@ Curve createPolynomial(
 	Color color = getRandomColor()
 );
 
+Curve createPolynomial(
+	const std::vector<double>& coefficients,
+	char curveChar,
+	Color color
+);
+
 Curve createExponential(double verticalScale = 1.0,
 						double base = 2.0,
 						double horizontalScale = 1.0,

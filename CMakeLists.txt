@@ -66,6 +66,7 @@ add_library(graphite_core
         src/rectangle.cpp
         src/terminal.cpp
         src/curveCollection.cpp
+        src/curvePersistence.cpp
 )
 
 target_include_directories(graphite_core
