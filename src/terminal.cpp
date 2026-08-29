@@ -5,6 +5,11 @@
 #include <termios.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <poll.h>
+
+namespace {
+    bool readByteWithTimeout(unsigned char& byte);
+}
 
 void gotoxy(int x, int y) {
     std::cout << "\033[" << y << ";" << x << "H";
@@ -115,4 +120,93 @@ void enterAlternateScreen() {
 
 void leaveAlternateScreen() {
     std::cout << "\033[?1049l";
+}
+
+int getKey() {
+    termios originalSettings{};
+
+    if (tcgetattr(STDIN_FILENO, &originalSettings) == -1) {
+        return EOF;
+    }
+
+    termios rawSettings = originalSettings;
+
+    rawSettings.c_lflag & = static_cast<tcflag_t>(~(ICANON | ECHO));
+
+    rawSettings.c_cc[VMIN] = 1;
+    rawSettings.c_cc[VTIME] = 0;
+
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &rawSettings) == -1) {
+        return EOF;
+    }
+
+    std::cout << std::flush;
+
+    unsigned char first{};
+    int result = EOF;
+
+    if (read(STDIN_FILENO, &first, 1) == 1) {
+        result = static_cast<int>(first);
+
+        if (first == Key::Escape) {
+            unsigned char second{};
+
+            if (!readByteWithTimeout(second)) {
+                result = Key::Escape;
+            }
+            else if (second != '[') {
+                result = Key::Escape;
+            }
+            else {
+                unsigned char third{};
+
+                if (!readByteWithTimeout(third)) {
+                    result = Key::Escape;
+                }
+                else {
+                    switch (third) {
+                        case 'A':
+                            result = Key::ArrowUp;
+                            break;
+
+                        case 'B':
+                            result = Key::ArrowDown;
+                            break;
+
+                        case 'C':
+                            result = Key::ArrowRight;
+                            break;
+
+                        case 'D':
+                            result = Key::ArrowLeft;
+                            break;
+
+                        default:
+                            result = Key::Escape;
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &originalSettings);
+
+    return result;
+}
+
+namespace {
+    constexpr int escapeSequenceTimeoutMilliseconds = 50;
+
+    bool readByteWithTimeout(unsigned char& byte) {
+        pollfd input{.fd = STDIN_FILENO, .events = POLLIN, .revents = 0};
+
+        const int pollResult = poll(&input, 1, escapeSequenceTimeoutMilliseconds);
+
+        if (pollResult <= 0 ||(input.revents & POLLIN) == 0) {
+            return false;
+        }
+
+        return read(STDIN_FILENO, &byte, 1) == 1;
+    }
 }

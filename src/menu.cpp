@@ -3,32 +3,8 @@
 #include "menu.h"
 #include "terminal.h"
 
-namespace {
-int getKey() {
-		int key = getch();
 
-		if (key != 27) {
-			return key;
-		}
-
-		int second = getch();
-
-		if (second != '[') {
-			return 27; // regular Escape
-		}
-
-		int third = getch();
-
-		switch (third) {
-			case 'A': return 72; // up
-			case 'B': return 80; // down
-			case 'C': return 77; // right
-			case 'D': return 75; // left
-			default:  return 27;
-		}
-}
-
-void addMenu(Menu& menu, const std::string& title, Action action, char key) {
+void addMenu(Menu& menu, const std::string& title, Action action, int key) {
 	if (menu.size < sizeMenu) {
 		menu.items[menu.size].name = title;
 		menu.items[menu.size].action = action;
@@ -37,13 +13,12 @@ void addMenu(Menu& menu, const std::string& title, Action action, char key) {
 	}
 }
 
-void addHiddenMenu(Menu& menu, HiddenAction hiddenAction, char hiddenKey) {
+void addHiddenMenu(Menu& menu, HiddenAction hiddenAction, int hiddenKey) {
 	if (menu.sizeHidden < sizeHiddenMenu) {
 		menu.hiddenItems[menu.sizeHidden].hiddenAction = hiddenAction;
 		menu.hiddenItems[menu.sizeHidden].key = hiddenKey;
 		++menu.sizeHidden;
 	}
-}
 }
 
 void initializeMenu(Menu& menu, const Box& box, const std::string& title, bool isHidden) {
@@ -58,10 +33,10 @@ void populateMenu(
 	Menu& menu,
 	const std::string name[],
 	const Action action[],
-	const char key[],
+	const int key[],
 	std::size_t size,
 	const HiddenAction hiddenActions[],
-	const char hiddenKeys[],
+	const int hiddenKeys[],
 	std::size_t hiddenSize
 	) {
 
@@ -78,7 +53,10 @@ void populateMenu(
 
 ResolvedAction resolveAction(const Menu& menu) {
 	ResolvedAction result;
-	int key = getKey();
+
+	const int inputKey = getKey();
+	// treat '*' as an escape key
+	const int key = inputKey == '*' ? Key::Escape : inputKey;
 
 	if (key == 0 || key == 224) {
 		const int secondKey = getch();
