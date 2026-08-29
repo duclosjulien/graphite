@@ -1,8 +1,20 @@
 
- n_curves = 1
+ n_curves = 3
 
  [curve]
  type = sin
  coef = { 1, 1, 0, 0 }
  char = L
  color = 2
+
+ [curve]
+ type = log
+ coef = { 1, 2, 1, 0, 0 }
+ char = D
+ color = 1
+
+ [curve]
+ type = exp
+ coef = { 1, 2, 1, 0, 0 }
+ char = Q
+ color = 11

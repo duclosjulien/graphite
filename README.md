@@ -1,5 +1,7 @@
 # Graphite
 
+[![Verify](https://github.com/duclosjulien/graphite/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/duclosjulien/graphite/actions/workflows/verify.yml)
+
 Graphite is a small terminal function grapher written in C++.
 
 It lets you create and display different types of curves directly in the terminal, then modify their parameters interactively.
@@ -36,6 +38,16 @@ Then run:
 ./build/graphite
 ```
 
+## Tests
+
+Configure, build, and run the tests with:
+
+```bash
+cmake -S . -B build -DBUILD_TESTING=ON
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+```
+
 ## Requirements
 
 * C++20 compatible compiler
@@ -54,4 +66,7 @@ The layout adapts to the terminal size when the app starts. If you resize the te
 
 Graphite is tested with Catch2 and CTest. GitHub Actions verifies warning-clean builds with GCC and Clang and runs AddressSanitizer and UndefinedBehaviorSanitizer checks.
 
+## License
+
+Graphite is available under the [MIT License](LICENSE).
 
