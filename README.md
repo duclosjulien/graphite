@@ -2,7 +2,7 @@
 
 [![Verify](https://github.com/duclosjulien/graphite/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/duclosjulien/graphite/actions/workflows/verify.yml)
 
-Graphite is a small terminal function grapher written in C++.
+Graphite is an interactive terminal function grapher written in C++20.
 
 It lets you create and display different types of curves directly in the terminal, then modify their parameters interactively.
 
@@ -10,15 +10,48 @@ It lets you create and display different types of curves directly in the termina
 
 ## Features
 
-* Plot multiple curves at the same time
-* Supports sine, cosine, tangent, polynomial, exponential, and logarithmic functions
-* Modify curve parameters interactively
-* Built with C++20 and CMake
-* Tests with Catch2
+- Plot multiple curves at the same time
+- Create sine, cosine, tangent, polynomial, exponential, and logarithmic curves
+- Modify curve parameters interactively
+- Pan and zoom the graph
+- Save and restore curves between sessions
+- Run on macOS and Linux terminals
 
-## Supported platforms
+## Controls
 
-Graphite supports macOS and Linux terminals with POSIX `termios` support.
+- Home mode
+  - `V`: Open the interactive view
+  - `C`: Open curve editing
+  - `Esc` or `*`: Quit
+
+- Interactive view
+  - Arrow keys: Pan the graph
+  - `R`: Reset the view
+  - `E` / `Q`: Zoom in or out
+  - `W` / `S`: Zoom the Y axis
+  - `D` / `A`: Zoom the X axis
+  - `Esc` or `*`: Return home
+
+- Curve editing
+  - Up / Down: Select the previous or next curve
+  - Left / Right: Select the first or last curve
+  - `S`, `C`, `T`, `P`, `E`, `L`: Add a curve
+  - `Z`: Show all curves
+  - `X`: Show only the selected curve
+  - `#`: Remove the selected curve
+  - `1–9`: Select a parameter
+  - `+` / `-`: Adjust the selected parameter
+  - `Esc` or `*`: Return home
+
+## Requirements
+
+- C++20-compatible compiler
+- CMake 3.19 or newer
+- macOS or Linux
+- ANSI-compatible terminal
+- Minimum terminal size of 118 columns by 29 rows
+
+Graphite detects the terminal size when it starts and adapts the layout to larger terminals. If you resize the terminal while Graphite is running, restart the app to update the layout.
 
 Windows is not currently supported.
 
@@ -48,23 +81,56 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-## Requirements
+Graphite uses Catch2 and CTest. GitHub Actions verifies warning-clean builds with GCC and Clang and runs AddressSanitizer and UndefinedBehaviorSanitizer checks.
 
-* C++20 compatible compiler
-* CMake 3.19+
-- macOS or Linux
-- ANSI-compatible terminal
-- Minimum terminal size: 118 × 29
+## Architecture
 
-## Terminal
+```mermaid
+flowchart LR
+  Main[main.cpp] --> Application[Application lifecycle and actions]
 
-Graphite supports terminals that are at least 118 columns by 29 rows**.
+  Application --> Menu[Menus and keyboard actions]
+  Application --> Collection[CurveCollection]
+  Application --> Graph[Graph and coordinate transforms]
+  Application --> Information[Information panels]
+  Application --> Persistence[Curve persistence]
 
-The layout adapts to the terminal size when the app starts. If you resize the terminal while Graphite is running, restart the app to update the layout.
+  Collection --> Curve[Curve creation and evaluation]
+  Persistence --> Curve
 
-## Development
+  Menu --> Terminal[Terminal adapter]
+  Graph --> Terminal
+  Curve --> Terminal
+  Information --> Terminal
+```
 
-Graphite is tested with Catch2 and CTest. GitHub Actions verifies warning-clean builds with GCC and Clang and runs AddressSanitizer and UndefinedBehaviorSanitizer checks.
+## Roadmap
+
+### Core application
+
+- Interactive terminal UI with multiple application modes
+- Keyboard-driven menus and controls
+- Plotting and editing of six curve types
+- Independent graph panning and zooming
+- Multiple-curve creation, selection, and display
+
+### Modernization completed
+
+- Updated the project to C++20 and target-based CMake
+- Replaced manual curve memory management with standard containers and RAII
+- Replaced the custom linked list with an encapsulated curve collection
+- Added automated tests, compiler warnings, CI, and sanitizers
+- Added validated curve persistence
+- Added terminal-size detection and adaptive layout
+- Replaced Windows keyboard handling with POSIX terminal input
+
+### Planned
+
+- Continue applying modern C++ practices to the remaining legacy interfaces
+- Separate application actions from the interactive loop
+- Separate mathematical curve logic from terminal rendering
+- Restore terminal state automatically after failures
+- Improve rendering of steep curves and discontinuities
 
 ## License
 
