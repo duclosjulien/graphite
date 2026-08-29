@@ -131,7 +131,7 @@ int getKey() {
 
     termios rawSettings = originalSettings;
 
-    rawSettings.c_lflag & = static_cast<tcflag_t>(~(ICANON | ECHO));
+    rawSettings.c_lflag &= static_cast<tcflag_t>(~(ICANON | ECHO));
 
     rawSettings.c_cc[VMIN] = 1;
     rawSettings.c_cc[VTIME] = 0;
