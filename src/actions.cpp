@@ -1,4 +1,5 @@
 #include "actions.h"
+#include "terminal.h"
 
 const std::size_t sizeActionHome = 3;
 const std::size_t sizeActionVisualization = 12;
@@ -17,10 +18,10 @@ const Action homeAction[sizeActionHome] {
 	Action::Quit
 };
 
-const char homeKey[sizeActionHome] {
+const int homeKey[sizeActionHome] {
 	'v',
 	'c',
-	27
+	Key::Escape
 };
 
 const std::string visualizationName[sizeActionVisualization] {
@@ -51,22 +52,21 @@ const Action visualizationAction[sizeActionVisualization] {
 	Action::VisualizationZoomOutY,
 	Action::VisualizationZoomInX,
 	Action::ModeMain
-
 };
 
-const char visualizationKey[sizeActionVisualization] {
+const int visualizationKey[sizeActionVisualization] {
 	'r',
-	75,
-	72,
-	77,
-	80,
+	Key::ArrowLeft,
+	Key::ArrowUp,
+	Key::ArrowRight,
+	Key::ArrowDown,
 	'e',
 	'q',
 	'w',
 	'a',
 	's',
 	'd',
-	27
+	Key::Escape
 };
 
 const std::string curveName[sizeActionCurve] {
@@ -101,14 +101,13 @@ const Action curveAction[sizeActionCurve] {
 	Action::CurveAddExponential,			
 	Action::CurveAddLogarithmic,
 	Action::ModeMain,
-	
 };
 
-const char curveKey[sizeActionCurve] {
-	72,
-	80,
-	75,
-	77,
+const int curveKey[sizeActionCurve] {
+	Key::ArrowUp,
+	Key::ArrowDown,
+	Key::ArrowLeft,
+	Key::ArrowRight,
 	'z',
 	'x',
 	'#',
@@ -118,7 +117,7 @@ const char curveKey[sizeActionCurve] {
 	'p',
 	'e',
 	'l',
-	27
+	Key::Escape
 };
 
 const HiddenAction curveHiddenAction[sizeHiddenActionCurve] {
@@ -135,7 +134,7 @@ const HiddenAction curveHiddenAction[sizeHiddenActionCurve] {
 	HiddenAction::CurveParameterDecrease
 };
 
-const char hiddenCurveKey[sizeHiddenActionCurve] {
+const int hiddenCurveKey[sizeHiddenActionCurve] {
 	'1',
 	'2',
 	'3',
